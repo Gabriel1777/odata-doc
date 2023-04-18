@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Laravel OData</title>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet"/>
+	<link rel="stylesheet" href="css/app.css"/>
+	<link rel="stylesheet" href="css/dark.css"/>
+	<link rel="stylesheet" href="css/code.css"/>
+</head>
+<body>
+	<main id="my-app">
+		<aside class="left-panel">
+
+			<div class="panel-header">
+				<div class="container-logo">
+					<img src="images/laravel.png" class="laravel-logo"/>
+					<span class="logo-divider">+</span>
+					<img src="images/odata.png" class="odata-logo"/>
+				</div>
+				<div class="container-title">
+					<h1 class="header-title">Laravel/OData</h1>
+				</div>
+			</div>
+
+			<div class="panel-body">
+				<ul>
+					<li class="top-item active1"> 
+						<a href="#"> 
+							<span class="item-icon">#</span> Introducción
+						</a>
+					</li>
+					<li class="top-item"> 
+						<a href="#"> 
+							<span class="item-icon">#</span> Instalación
+						</a>
+					</li>
+					<li class="top-item"> 
+						<a href="#"> 
+							<span class="item-icon">#</span> Integración
+						</a>
+						<ul>
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Cargar metodos
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Crear controladores
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Uso
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class="top-item"> 
+						<a href="#"> 
+							<span class="item-icon">#</span> Transformadores
+						</a>
+						<ul>
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Usando modelos
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Personalizado
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Laravel/fractal
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class="top-item"> 
+						<a href="#"> 
+							<span class="item-icon">#</span> Filtros
+						</a>
+					</li>
+					<li class="top-item"> 
+						<a href="#"> 
+							<span class="item-icon">#</span> Parámetros
+						</a>
+					</li>
+				</ul>
+			</div>
+
+		</aside>
+
+		<div class="doc-main">
+
+			<h1 class="big-logo-title">Laravel/OData V1</h1>
+			<div class="big-container-logo">
+				<img src="images/laravel.png" class="laravel-logo"/>
+				<span class="logo-divider">+</span>
+				<img src="images/odata.png" class="odata-logo"/>
+			</div>
+			<article>
+				<br/>
+				<h1> <span class="item-icon">#</span> Introducción</h1>
+				<br/>
+				Protocolo de datos Abiertos para Laravel
+				<br/>
+				<span class="label">Laravel/OData</span> es un paquete que implementa el protocolo de datos abierto en Laravel 5.8 o superior.
+				<br/>
+				<span class="label">OData</span> es la mejor forma de implementar <span class="label">API REST</span> en las aplicaciones, es usado por Microsoft en su lenguaje de programación C#. define un conjunto de mejores practicas a la hora de construir una API para que los desarroladores se concentren en la lógica comercial y así poder olvidarse de las preocupaciones por códigos de estado HTTP, convenciones de url, manejo de consultas y demas. <a href="#" class="article-link">https://www.odata.org/</a> <br/>
+				Este paquete expone una serie de funciones usadas por OData pero adaptadas a la metodologia que usa laravel, para exponer modelos, usar filtros , manejar consultas y demas usando <span class="label">Eloquent</span>.
+				<br/>
+				Las ventajas que se obtienen al usar un protocolo de datos abiertos a la hora de contruir <span class="label">API Rest</span> es que este agiliza el desarrolo en el backend al evitar el uso de consultas complejas y super anidadas en los controladores, ademas de que esto mantiene limpio los controladores de logica super extensa que daña las buenas practicas al violar el principio de que los modelos deben mantener la logica de negocio y los controladores solo deben devolver datos.
+				<br/>
+				OData te permite exponer un modelo atravez de un controlador y de esta manera te olvidas de todas las posibles consultas que pueden salir apartir de ese modelo, ya que es posible solicitarle a la API que filtre los datos expuestos por el modelo por uno o varios campos. usando condicionales <span class="label">and</span> u <span class="label">or</span> de está manera se evita tener que programar cada una de las funciones que expone un sistema que pueden llegar a ser muchas.
+				<br/>
+				tome como ejemplo un modelo de usuarios <span class="label"> App\User</span> este expone las siguientes consultas en su sistema:
+				<br/>
+				<span class="label circle">○</span> Lista de usuarios.<br/>
+				<span class="label circle">○</span> Lista de usuarios que pertenecen a un pais.<br/>
+				<span class="label circle">○</span> Lista de usuarios que pertenecen a una ciudad.<br/>
+				<span class="label circle">○</span> Lista de usuarios que se registrarón este mes.<br/>
+				<span class="label circle">○</span> Lista de usuarios que pertenecen a cierto rol.<br/>
+				entre otras ...<br/>
+				normalmente usted puede pensar en crear un <span class="label">Endpoint</span> por cada consulta, o filtrar manualmente los usuarios desde una unica ruta basandose en los diferentes parámetros que se le envían a travez de la url.
+				<br/>
+				uno de los problemas que se tienen al hacer esto es que usted mismo deberá programar la logica para cada consulta ademas de que si tiene un número bastante amplio de consultas solo para el modelo de usuarios. tratar de poner toda la logica en un solo controlador no escala y dañará las practicas de su código al asignar logica demasiado extensa a un controlador.
+				<br/>
+				Si decide optar por la solución de poner la lógica de cada consulta en una ruta diferente esto solucionará el problema de las malas practicas en sus controladores, pero de igual forma si tiene muchas consultas tendrá un número grande de rutas solo para consultar un solo modelo, en este caso el <span class="label">App\User</span>.
+				<br/>
+				Con el <span class="label">OData</span> solo tendrá que exponer su modelo <span class="label">App\User</span> o cualquier otro desde un unico controlador y la aplicación o las aplicaciones que consumen está api pueden solicitarle diferentes consultas al modelo de usuarios usando unicamente parámetros por url. de esto se trata el <span class="label">OData</span>, de una <span class="label">API Rest</span> que solamente expone recursos en este caso <span class="label">Modelos</span> y de está manera los desarrolladores solo tienen que preocuparse por consumir los recursos y construir su aplicación en el front.
+				<br/>
+				Ademas el <span class="label">OData</span> se encarga de otros procesos comunes en las API, como paginación, alinemiento de datos, exportación de datos, relationships, consultas multitabla entre otros ...
+				<br/>
+			</article>
+			<article>
+				<h1> <span class="item-icon">#</span> Instalación</h1>
+				<br/>
+				Para instalar el paquete puede hacerlo usando composer ejecutando el siguiente comando desde su terminal:
+				<div class="cmd-code">composer require apilaravelodata/odata</div>
+				una vez instalado el paquete asegurese de tener migradas sus tablas en la base de datos:
+				<div class="cmd-code">php artisan migrate</div>
+				una vez que ya tenga migradas las tablas en la base de datos, el paquete de <span class="label">OData</span> necesitará mapear cada una de sus tablas y almacenar cada uno de los campos en cache, esto se hace para tener un <span class="label">Esquema</span> de la base de datos en cache y evitar realizar consultas a la base de datos para verificar si existen campos que se solictan por la url, de está manera el <span class="label">OData</span> ya tiene un <span class="label">Esquema</span> en cache y puede verificar que campos son validos y cuales no los son usando procesos desde memoria. para crear el <span class="label">Esquema</span> de la base de datos en cache ejecute el siguiente comando:
+				<div class="cmd-code">php artisan odata:config</div>
+				Tenga en cuenta de que cada vez que modifique algúna de sus tablas agregando uno o mas campos, deberá ejecutar este comando para actualizar la cache del <span class="label">OData</span>.
+				<br/>
+			</article>
+
+			<article>
+				<h1> <span class="item-icon">#</span> Integración</h1>
+				<br/>
+				<h3># Cargar metodos</h3>
+				El siguiente paso que debe hacer es configurar el odata para poder exponerlo desde sus controladores, para esto se recomienda usar un <span class="label">ApiController</span> controlador para su api donde incluya el uso del <span class="label">OData</span>. por ejemplo puede crear un <span class="label">app/Http/Controllers/ApiController.php</span> con el siguiente contenido:
+
+				<div class="code-block">
+					<span class="yellow-code"><xmp><?php</xmp></span>
+					<div class="code-divider"></div>
+					<span class="purple-code">namespace</span>
+					<span class="light-code">App\Http\</span><span class="yellow-code">Controllers</span><span class="light-code">;</span>
+
+					<div class="code-divider"></div>
+
+					<span class="purple-code">use</span>
+					<span class="yellow-code">ODataResponse</span><span class="light-code">;</span>
+
+					<div class="code-divider"></div>
+
+					<span class="purple-code">class</span>
+					<span class="light-code"> ApiController </span>
+					<span class="purple-code">extends</span>
+					<span class="green-code">Controller</span><br/>
+					{
+						<div class="code-padding">
+							<span class="purple-code">use </span>
+							<span class="yellow-code">ODataResponse</span>;
+							<br/>
+						</div>
+					}
+				</div>
+
+				Como puedes darte cuenta se trata de una simple clase que hereda a <span class="label">Controller</span> y esta implementa el trait de <span class="label">ODataResponse</span> que se encarga de cargar todos los metodos de <span class="label">OData</span> dentro de la clase.
+				<br/><br/>
+
+				<h3># Crear Controladores</h3>
+
+				Una vez ya tenga la clase con los metodos del <span class="label">OData</span> cargados, lo siguiente que debe hacer es agregar esta clase a sus controladores para empezar a usar los metodos expuestos por el <span class="label">OData</span>. para el ejemplo usaremos un <span class="label">app/Http/Controllers/UserController.php</span> controlador con el siguiente contenido:
+
+				<div class="code-block">
+					<span class="yellow-code"><xmp><?php</xmp></span>
+					<div class="code-divider"></div>
+
+					<span class="purple-code">namespace</span>
+					<span class="light-code">App\Http\</span><span class="yellow-code">Controllers</span><span class="light-code">;</span>
+
+					<div class="code-divider"></div>
+
+					<span class="purple-code">use </span>App\Http\Controllers\<span class="yellow-code">ApiController</span>;
+
+					<div class="code-divider"></div>
+
+					<span class="purple-code">class</span>
+					<span class="light-code"> UserController </span>
+					<span class="purple-code">extends</span>
+					<span class="green-code">ApiController</span><br/>
+					{
+						<div class="code-padding">
+							<span class="comment-code">// ...</span>
+						</div>
+					}
+				</div>
+
+				<h3># Uso</h3>
+
+				Ahora simplemente dentro del controlador cremos un metodo index que retorna un <span class="label">odataJsonResponse</span> basado en un modelo de <span class="label">Eloquent</span>.
+
+				<div class="code-block">
+					<span class="yellow-code"><xmp><?php</xmp></span>
+					<div class="code-divider"></div>
+
+					<span class="purple-code">namespace</span>
+					<span class="light-code">App\Http\</span><span class="yellow-code">Controllers</span><span class="light-code">;</span>
+
+					<div class="code-divider"></div>
+
+					<span class="purple-code">use </span>App\Models\<span class="yellow-code">User</span>;
+					<div class="code-divider"></div>
+					<span class="purple-code">use </span>App\Http\Controllers\<span class="yellow-code">ApiController</span>;
+
+					<div class="code-divider"></div>
+
+					<span class="purple-code">class</span>
+					<span class="light-code"> UserController </span>
+					<span class="purple-code">extends</span>
+					<span class="green-code">ApiController</span><br/>
+					{
+						<div class="code-padding">
+							<span class="purple-code">public function </span> index <span class="code-sign">( )</span> <br/>
+							{
+								<div class="code-padding">
+									<span class="purple-code">return </span>
+									<span class="blue-code">$this</span><span class="code-sign">-></span><span class="yellow-code">odataJsonResponse</span><span class="code-sign">(</span>
+									<span class="purple-code">new </span><span class="code-sign">User</span>( )<span class="code-sign"> )</span>;
+								</div>
+							}
+						</div>
+					}
+				</div>
+
+				Listo, esto es lo que necesitamos para implementar el <span class="label">OData</span> en una aplicación de laravel. lo siguiente que debes hacer es crear una ruta que apunte al metodo index de tu controlador y una vez realices una solicitud HTTP a esta ruta el <span class="label">OData</span> ya se encargará de generar la estructura de la respuesta en json, el código de estado HTTP junto con la colección de datos. un ejemplo de respuesta sería esta:
+
+				<div class="code-block">
+					{
+						<div class="code-padding">
+							<span class="green-code">"data"</span> : [
+							<div class="code-padding">
+								<span class="green-code">"data"</span> : [
+									<div class="code-padding">
+										{
+											<div class="code-padding">
+												<span class="green-code">"id"</span> : <span class="code-sign">1</span>,<br/>
+												<span class="green-code">"name"</span> : <span class="green-code">"example user"</span><br/>
+												<span class="comment-code">// ...rest</span>
+											</div>
+										}, <br/>
+										{
+											<div class="code-padding">
+												<span class="green-code">"id"</span> : <span class="code-sign">2</span>,<br/>
+												<span class="comment-code">// ...rest</span>
+											</div>
+										}
+									</div>
+								], <br/>
+								<span class="green-code">"length"</span> : <span class="code-sign">2</span> <span class="comment-code">// número de registro en la colección</span>
+							</div>
+							],<br/>
+							<span class="green-code">"code"</span> : <span class="yellow-code">200</span>
+						</div>
+					}
+					</span>
+				</div>
+
+				Esta es la estructura que por defecto se devolverá para serializar las respuestas de la API, si desea modificarla puede obtener el resultado que devuelve el <span class="label">odataJsonResponse</span> y luego armar un array con base en los valores que obtuvo. y de está manera puede agregar propiedades adicionales que necesite retornar en cada una de las repuestas de su API.
+			</article>
+
+			<article>
+				<h1> <span class="item-icon">#</span> Transformadores</h1>
+				<br>
+				Los transformadores se usan para estructurar cada uno de los objetos que se devuelven en las colecciónes de cada una de las respuestas de la API, en el caso del modelo de usuarios el <span class="label">OData</span> por defecto devolverá la colección que devuelve laravel en sus colecciones por ejemplo al llamar un <span class="label">User::all()</span>.
+				<br/><br/>
+				<h3># Usando modelos </h3>
+				otra caracteristica que tiene el <span class="label">OData</span> es que por defecto devolverá la coleción completa sin ningún tipo de filtro ni paginación. esto obviamente se puede soliciar desde la url, pero el punto aquí es que devolver todos los datos del modelo puede no ser lo que usted tiene planeado. por ejemplo no queremos que la contraseña del usuario se vea en la respuesta de la API, o puede que necesitemos agregar otras propiedades mas al modelo con información adicional que no necesariamente debe estar almacenada en la base de datos. <br/>
+				para esto se puede usar un transformador personalizado desde el módelo, lo unico que tiene que hacer es declarar un <span class="label">transform</span> metodo dentro del modelo que devuelva un array. si el <span class="label">OData</span> detecta que existe este metodo dentro del modelo lo usará para serializar los objetos que se devuelven en la coleción de datos.
+				<br/>
+				esto puede ser util para asegurarse de que la respuesta devuelva unicamente los datos que usted necesita incluyendo otros datos adicionales ejemplo:
+
+				<div class="code-block">
+					<span class="comment-code">// ...</span>
+					<div class="code-divider"></div>
+					<span class="purple-code">class</span> <span class="yellow-code">User</span> <span class="purple-code">extends</span> <span class="green-code">Model</span><br/>
+					{
+						<div class="code-padding">
+							<span class="comment-code">// ...</span><br/>
+							<span class="purple-code">public function</span> transform <span class="code-sign">( )</span><br/>
+							{
+								<div class="code-padding">
+									<span class="purple-code">return</span> [
+										<div class="code-padding">
+											<span class="green-code">"id"</span> <span class="yellow-code">=></span> <span class="blue-code">$this</span><span class="code-sign">-></span>id,<br/>
+											<span class="green-code">"name"</span> <span class="yellow-code">=></span> <span class="blue-code">$this</span><span class="code-sign">-></span>name,<br/>
+											<span class="green-code">"role"</span> <span class="yellow-code">=></span> <span class="blue-code">$this</span><span class="code-sign">-></span>role_id,<br/>
+											<span class="green-code">"photo"</span> <span class="yellow-code">=></span> <span class="blue-code">$this</span><span class="code-sign">-></span><span class="yellow-code">getPhoto<span class="code-sign">( )</span><br/>
+										</div>
+									];
+								</div>
+							}
+							<br/><span class="comment-code">// ...</span>
+						</div>
+					}
+					<br/><span class="comment-code">// ...</span>
+				</div>
+			</article>
+		</div>
+	</main>
+	<script src="https://unpkg.com/vue@next"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+	<script src="js/app.js"></script>
+</body>
+</html>

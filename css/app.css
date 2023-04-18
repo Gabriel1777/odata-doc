@@ -1,0 +1,223 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Open Sans';
+}
+
+body {
+	background-color: white;
+}
+
+main {
+	width: 100%;
+	margin: auto;
+	display: flex;
+	overflow: hidden;
+	border-radius: 5px;
+	flex-direction: row;
+	background-color: #FFF;
+}
+
+.left-panel {
+	width: 500px;
+	display: flex;
+	padding-left: 200px;
+	flex-direction: column;
+	background-color: #f4f4ff;
+	border-right: 1px solid #dbd1d1;
+}
+
+.panel-header {
+	display: flex;
+	padding: 10px;
+	flex-wrap: nowrap;
+	flex-direction: row;
+	align-items: center;
+	border-bottom: 1px solid #dbd1d1;
+}
+
+.container-logo {
+	width: 120px;
+	display: flex;
+	cursor: pointer;
+	overflow: hidden;
+	flex-wrap: nowrap;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.container-logo .laravel-logo {
+	width: 40px;
+	height: auto;
+}
+
+.container-logo .odata-logo {
+	width: 45px;
+	height: auto;
+}
+
+.container-logo .logo-divider {
+	color: #EB4432;
+}
+
+.big-container-logo {
+	width: 520px;
+	display: flex;
+	cursor: pointer;
+	overflow: hidden;
+	flex-wrap: nowrap;
+	margin-left: 70px;
+	flex-direction: row;
+	align-items: center;
+	margin-bottom: 20px;
+	justify-content: space-between;
+}
+
+.big-container-logo .laravel-logo {
+	width: 190px;
+	height: auto;
+}
+
+.big-container-logo .odata-logo {
+	width: 195px;
+	height: auto;
+}
+
+.big-container-logo .logo-divider {
+	color: #EB4432;
+	font-size: 50px;
+	font-weight: bold;
+}
+
+.big-logo-title {
+	color: #EB4432;
+	font-size: 50px;
+	margin-left: 52px;
+	margin-bottom: 20px;
+}
+
+.container-title {
+	cursor: pointer;
+	margin-left: 15px;
+}
+
+.container-title .header-title {
+	color: #EB4432;
+	font-size:15px;
+}
+
+.item-icon {
+	color: #EB4432;
+	margin-right: 5px;
+	font-weight: bold;
+}
+
+.panel-body ul {
+	list-style: none;
+}
+
+.panel-body ul li {
+	cursor: pointer;
+	transition: all ease 1s;
+}
+
+.panel-body ul li.top-item > a:hover {
+	background-color: #dee4f9;
+}
+
+.panel-body ul li a {
+	color: #000;
+	display: block;
+	font-size: 14px;
+	font-weight: bold;
+	padding: 15px 20px;
+	text-decoration: none;
+	border-bottom: 1px solid #dbd1d1;
+}
+
+.panel-body ul li.active {
+	background-color: #EB4432;
+}
+
+.panel-body ul li.active a {
+	color: white;
+}
+
+.panel-body ul li.active .item-icon {
+	color: white;
+}
+
+.panel-body ul li ul {
+	list-style: none;
+}
+
+.panel-body ul li ul li {
+	padding-left: 40px;
+}
+
+.panel-body ul li ul li:hover {
+	background-color: #dee4f9;
+}
+
+.panel-body ul li ul li a {
+	padding: 15px 0px;
+	border-bottom: none;
+}
+
+.doc-main {
+	width: 60%;
+	overflow: hidden;
+	padding: 20px 30px;
+}
+
+article {
+	font-size: 14px;
+	line-height: 27px;
+	margin-bottom: 20px;
+	justify-content: justify;
+}
+
+article h3 {
+	font-size: 14px;
+}
+
+.label {
+	color: #EB4432;
+}
+
+.label.circle {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.article-link {
+	color: #EB4432;
+}
+
+.cmd-code {
+	padding: 12px;
+	color: #BFC7D5;
+	margin: 20px 0px;
+	border-radius: 5px;
+	background-color: #252A37;
+}
+
+@media screen and (max-width: 1500px) {
+	.left-panel {
+		width: 400px;
+		padding-left: 100px;
+	}
+}
+
+@media screen and (max-width: 1200px) {
+	.left-panel {
+		width: 300px;
+		padding-left: 0px;
+	}
+
+	.doc-main {
+		width: 70%;
+	}
+}

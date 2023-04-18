@@ -1,0 +1,23 @@
+main {
+	background-color: #1b1e26;
+}
+
+.left-panel {
+	background-color: #232730;
+}
+
+.left-panel ul li a {
+	color: #B5B5BD;
+}
+
+article {
+	color: #B5B5BD;
+}
+
+.panel-body ul li ul li:hover {
+	background-color: #1b1e26;
+}
+
+.panel-body ul li.top-item > a:hover {
+	background-color: #1b1e26;
+}

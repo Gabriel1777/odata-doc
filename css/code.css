@@ -1,0 +1,44 @@
+.code-block {
+	padding: 20px;
+	color: #BFC7D5;
+	margin: 20px 0;
+	border-radius: 5px;
+	letter-spacing: 0.7px;
+	background-color: #252A37;
+}
+
+.light-code {
+	color: #BFC7D5;
+}
+
+.yellow-code {
+	color: #FFCB6B;
+}
+
+.green-code {
+	color: #A9C77D;
+}
+
+.purple-code {
+	color: #C792EA;
+}
+
+.blue-code {
+	color: #82AAFF;
+}
+
+.code-sign {
+	color: #89DDFF;
+}
+
+.comment-code {
+	color: #8c8c8c;
+}
+
+.code-divider {
+	margin: 5px 0;
+}
+
+.code-padding {
+	padding-left: 30px;
+}
