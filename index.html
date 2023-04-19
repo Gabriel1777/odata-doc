@@ -69,12 +69,12 @@
 							</li>
 							<li>
 								<a href="#">
-									<span class="item-icon">○</span>Personalizado
+									<span class="item-icon">○</span>Usando clases
 								</a>
 							</li>
 							<li>
 								<a href="#">
-									<span class="item-icon">○</span>Laravel/fractal
+									<span class="item-icon">○</span>Usando Laravel/fractal
 								</a>
 							</li>
 						</ul>
@@ -110,7 +110,7 @@
 				<br/>
 				<span class="label">Laravel/OData</span> es un paquete que implementa el protocolo de datos abierto en Laravel 5.8 o superior.
 				<br/>
-				<span class="label">OData</span> es la mejor forma de implementar <span class="label">API REST</span> en las aplicaciones, es usado por Microsoft en su lenguaje de programación C#. define un conjunto de mejores practicas a la hora de construir una API para que los desarroladores se concentren en la lógica comercial y así poder olvidarse de las preocupaciones por códigos de estado HTTP, convenciones de url, manejo de consultas y demas. <a href="#" class="article-link">https://www.odata.org/</a> <br/>
+				<span class="label">OData</span> es la mejor forma de implementar <span class="label">API REST</span> en las aplicaciones, es usado por Microsoft en su lenguaje de programación C#. define un conjunto de mejores practicas a la hora de construir una API para que los desarroladores se concentren en la lógica comercial y así poder olvidarse de las preocupaciones por códigos de estado HTTP, convenciones de url, manejo de consultas y demas. <a href="https://www.odata.org/" target="_blank" class="article-link">https://www.odata.org/</a> <br/>
 				Este paquete expone una serie de funciones usadas por OData pero adaptadas a la metodologia que usa laravel, para exponer modelos, usar filtros , manejar consultas y demas usando <span class="label">Eloquent</span>.
 				<br/>
 				Las ventajas que se obtienen al usar un protocolo de datos abiertos a la hora de contruir <span class="label">API Rest</span> es que este agiliza el desarrolo en el backend al evitar el uso de consultas complejas y super anidadas en los controladores, ademas de que esto mantiene limpio los controladores de logica super extensa que daña las buenas practicas al violar el principio de que los modelos deben mantener la logica de negocio y los controladores solo deben devolver datos.
@@ -320,6 +320,71 @@
 						</div>
 					}
 					<br/><span class="comment-code">// ...</span>
+				</div>
+				<h3># Usando clases </h3>
+				Puede que la lógica de su transformador sea mucho mas robusta y necesite tener varios metodos que retornan un resultado procesado para agregarlo como una propiedad en cada uno de los objetos de la coleción. en este caso no es una buena idea asignar toda esta lógica al modelo y lo mejor es separar la lógica de la transformación de datos en una clase por separado.<br/>
+				puede hacer esto creando una clase común y corriente con un metodo <span class="label">transform</span> que devuelva un array con los datos que desea mostrar por objeto, y puede usar el resto de la clase para agregar metodos que menejen y procesen la logica que necesita para las propiedades adicionales de su modelo ejemplo:
+
+				<div class="code-block">
+					<span class="purple-code">class</span> <span class="yellow-code">UserTransformer</span><br/>
+					{
+						<div class="code-padding">
+							<span class="purple-code">public function</span> getPhoto <span class="code-sign">( <span class="blue-code">$user</span> )</span><br/>
+							{
+								<div class="code-padding">
+									<span class="comment-code">// your code ...</span>
+								</div>
+							}
+						</div>
+
+						<div class="code-padding">
+							<span class="purple-code">public function</span> transform <span class="code-sign">( <span class="blue-code">$user</span> )</span><br/>
+							{
+								<div class="code-padding">
+									<span class="purple-code">return</span> [<br/>
+										<div class="code-padding">
+											<span class="green-code">"id"</span> <span class="yellow-code"> => </span> <span class="blue-code">$user</span><span class="code-sign">-></span>id,<br/>
+											<span class="green-code">"name"</span> <span class="yellow-code"> => </span> <span class="blue-code">$user</span><span class="code-sign">-></span>name,<br/>
+											<span class="green-code">"role"</span> <span class="yellow-code"> => </span> <span class="blue-code">$user</span><span class="code-sign">-></span>role_id,<br/>
+											<span class="green-code">"photo"</span> <span class="yellow-code"> => </span> <span class="blue-code">$this</span><span class="code-sign">-></span>getPhoto<span class="code-sign"> ( <span class="blue-code">$user</span> ),<br/>
+										</div>
+									];
+								</div>
+							}
+						</div>
+					}
+				</div>
+
+				Una vez ya creada la clase con la lógica del transformador deberá agregar la propiedad <span class="label">transformer</span> a su modelo para indicarle al <span class="label">OData</span> que use esta clase para serializar los objetos de la coleción que irá en la respuesta:
+
+				<div class="code-block">
+					<span class="comment-code">// ...</span><br/>
+					<span class="purple-code">class</span> <span class="yellow-code">User</span> <span class="purple-code">extends</span> <span class="green-code">Model</span>
+					{
+						<div class="code-padding">
+							<span class="comment-code">// ...</span><br/>
+							<span class="purple-code">public</span> <span class="blue-code">$transformer</span> <span class="code-sign">=</span> <span class="purple-code">new</span> <span class="yellow-code">UserTransformer</span> <span class="code-sign">( )</span>;<br/>
+							<span class="comment-code">// ...</span>
+						</div>
+					} <br/>
+					<span class="comment-code">// ...</span>
+				</div>
+
+				<h3># Usando Laravel/Fractal</h3><br/>
+
+				<span class="label">Laravel/Fractal</span> ya ofrece una librería para transformar datos <a target="_blank" class="article-link" href="https://fractal.thephpleague.com/transformers/">https://fractal.thephpleague.com/transformers/</a>, <span class="label">Laravel/OData</span> es compatible con este caso de uso. puede agregar la propiedad <span class="label">transformer</span> igualmente en su modelo especificando en lugar de una clase común una clase de transformador.
+
+				<div class="code-block">
+					<span class="purple-code">use </span> App\Transformers\<span class="yellow-code">UserTransformer</span>;
+					<div class="code-divider"></div>
+					<span class="purple-code">class</span> <span class="yellow-code">User</span> <span class="purple-code">extends</span> <span class="green-code">Model</span>
+					{
+						<div class="code-padding">
+							<span class="comment-code">// ...</span><br/>
+							<span class="purple-code">public</span> <span class="blue-code">$transformer</span> <span class="code-sign">=</span> <span class="yellow-code">UserTransformer</span><span class="code-sign">::</span><span class="blue-code">class</span>;<br/>
+							<span class="comment-code">// ...</span>
+						</div>
+					} <br/>
 				</div>
 			</article>
 		</div>
