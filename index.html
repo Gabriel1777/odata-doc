@@ -4,6 +4,28 @@
 	<title>Laravel OData</title>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet"/>
+
+	<!-- Robot -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;1,100;1,300;1,400&display=swap" rel="stylesheet">
+
+	<!-- Lato -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;1,100;1,300&family=Roboto:ital,wght@0,100;0,300;0,400;1,100;1,300;1,400&display=swap" rel="stylesheet">
+
+	<!-- Rubik -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;1,100;1,300&family=Roboto:ital,wght@0,100;0,300;0,400;1,100;1,300;1,400&family=Rubik:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+
+	<!-- Nunito -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;1,100;1,300&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;1,200;1,300;1,400&family=Roboto:ital,wght@0,100;0,300;0,400;1,100;1,300;1,400&family=Rubik:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+
+
 	<link rel="stylesheet" href="css/app.css"/>
 	<link rel="stylesheet" href="css/dark.css"/>
 	<link rel="stylesheet" href="css/code.css"/>
@@ -81,7 +103,7 @@
 					</li>
 					<li class="top-item"> 
 						<a href="#"> 
-							<span class="item-icon">#</span> Filtros
+							<span class="item-icon">#</span> Consultas por defecto
 						</a>
 					</li>
 					<li class="top-item"> 
@@ -105,7 +127,6 @@
 			<article>
 				<br/>
 				<h1> <span class="item-icon">#</span> Introducción</h1>
-				<br/>
 				Protocolo de datos Abiertos para Laravel
 				<br/>
 				<span class="label">Laravel/OData</span> es un paquete que implementa el protocolo de datos abierto en Laravel 5.8 o superior.
@@ -138,7 +159,6 @@
 			</article>
 			<article>
 				<h1> <span class="item-icon">#</span> Instalación</h1>
-				<br/>
 				Para instalar el paquete puede hacerlo usando composer ejecutando el siguiente comando desde su terminal:
 				<div class="cmd-code">composer require apilaravelodata/odata</div>
 				una vez instalado el paquete asegurese de tener migradas sus tablas en la base de datos:
@@ -151,7 +171,6 @@
 
 			<article>
 				<h1> <span class="item-icon">#</span> Integración</h1>
-				<br/>
 				<h3># Cargar metodos</h3>
 				El siguiente paso que debe hacer es configurar el odata para poder exponerlo desde sus controladores, para esto se recomienda usar un <span class="label">ApiController</span> controlador para su api donde incluya el uso del <span class="label">OData</span>. por ejemplo puede crear un <span class="label">app/Http/Controllers/ApiController.php</span> con el siguiente contenido:
 
@@ -214,7 +233,7 @@
 
 				<h3># Uso</h3>
 
-				Ahora simplemente dentro del controlador cremos un metodo index que retorna un <span class="label">odataJsonResponse</span> basado en un modelo de <span class="label">Eloquent</span>.
+				Ahora simplemente dentro del controlador creamos un metodo index que retorna un <span class="label">odataJsonResponse</span> basado en un modelo de <span class="label">Eloquent</span>.
 
 				<div class="code-block">
 					<span class="yellow-code"><xmp><?php</xmp></span>
@@ -247,6 +266,20 @@
 							}
 						</div>
 					}
+				</div>
+
+				Por ultimo es importante que establesca la propiedad <span class="label">table</span> dentro de su modelo como <span class="label">public</span>. esta propiedad la usa el <span class="label">OData</span> para identificar la tabla a la cual hace referencia el modelo.
+
+				<div class="code-block">
+					<span class="comment-code">// ...</span>
+					<div class="code-divider"></div>
+					<span class="purple-code">class</span> <span class="yellow-code">User</span> <span class="purple-code">extends</span> <span class="green-code">Model</span>
+					{
+						<div class="code-padding">
+							<span class="comment-code">// ...</span><br/>
+							<span class="purple-code">public</span> <span class="blue-code">$table</span> <span class="code-sign">=</span> <span class="green-code">"users"</span>;
+						</div>
+					} <br/>
 				</div>
 
 				Listo, esto es lo que necesitamos para implementar el <span class="label">OData</span> en una aplicación de laravel. lo siguiente que debes hacer es crear una ruta que apunte al metodo index de tu controlador y una vez realices una solicitud HTTP a esta ruta el <span class="label">OData</span> ya se encargará de generar la estructura de la respuesta en json, el código de estado HTTP junto con la colección de datos. un ejemplo de respuesta sería esta:
@@ -287,11 +320,10 @@
 
 			<article>
 				<h1> <span class="item-icon">#</span> Transformadores</h1>
-				<br>
 				Los transformadores se usan para estructurar cada uno de los objetos que se devuelven en las colecciónes de cada una de las respuestas de la API, en el caso del modelo de usuarios el <span class="label">OData</span> por defecto devolverá la colección que devuelve laravel en sus colecciones por ejemplo al llamar un <span class="label">User::all()</span>.
 				<br/><br/>
 				<h3># Usando modelos </h3>
-				otra caracteristica que tiene el <span class="label">OData</span> es que por defecto devolverá la coleción completa sin ningún tipo de filtro ni paginación. esto obviamente se puede soliciar desde la url, pero el punto aquí es que devolver todos los datos del modelo puede no ser lo que usted tiene planeado. por ejemplo no queremos que la contraseña del usuario se vea en la respuesta de la API, o puede que necesitemos agregar otras propiedades mas al modelo con información adicional que no necesariamente debe estar almacenada en la base de datos. <br/>
+				otra caracteristica que tiene el <span class="label">OData</span> es que por defecto devolverá la coleción completa sin ningún tipo de filtro ni paginación. esto obviamente se puede solicitar desde la url, pero el punto aquí es que devolver todos los datos del modelo puede no ser lo que usted tiene planeado. por ejemplo no queremos que la contraseña del usuario se vea en la respuesta de la API, o puede que necesitemos agregar otras propiedades mas al modelo con información adicional que no necesariamente debe estar almacenada en la base de datos. <br/>
 				para esto se puede usar un transformador personalizado desde el módelo, lo unico que tiene que hacer es declarar un <span class="label">transform</span> metodo dentro del modelo que devuelva un array. si el <span class="label">OData</span> detecta que existe este metodo dentro del modelo lo usará para serializar los objetos que se devuelven en la coleción de datos.
 				<br/>
 				esto puede ser util para asegurarse de que la respuesta devuelva unicamente los datos que usted necesita incluyendo otros datos adicionales ejemplo:
@@ -370,8 +402,7 @@
 					<span class="comment-code">// ...</span>
 				</div>
 
-				<h3># Usando Laravel/Fractal</h3><br/>
-
+				<h3># Usando Laravel/Fractal</h3>
 				<span class="label">Laravel/Fractal</span> ya ofrece una librería para transformar datos <a target="_blank" class="article-link" href="https://fractal.thephpleague.com/transformers/">https://fractal.thephpleague.com/transformers/</a>, <span class="label">Laravel/OData</span> es compatible con este caso de uso. puede agregar la propiedad <span class="label">transformer</span> igualmente en su modelo especificando en lugar de una clase común una clase de transformador.
 
 				<div class="code-block">
@@ -386,6 +417,41 @@
 						</div>
 					} <br/>
 				</div>
+			</article>
+
+			<article>
+				<h1> <span class="item-icon">#</span> Consultas por defecto </h1> 
+				Conociendo que el <span class="label">OData</span> devuelve todos los datos del modelo sin nigún tipo de filtro, es lógico pensar que puede que esto no se ajuste a su caso de uso.
+				puede que necesite ocultar cierta información a sus usuarios dependiendo del rol que tengan asignado, un ejemplo pordría ser las lista de ordenes donde cada usuario solo puede consultar las ordenes que ha realizado junto con su historial. y en el caso de tratarse del administrador este puede ver todas las ordenes.
+				<div class="divider"></div>
+				<h3># Usando un scope</h3>
+				puede definir la consulta por defecto que manejará el <span class="label">OData</span> declarando un <span class="label">scope</span> dentro de su modelo, el <span class="label">scope</span> en este caso deberá llamarse <span class="label">defaultQuery</span> y este debe retornar una consulta. si el <span class="label">OData</span> detecta que este scope existe dentro del modelo, aplicará por defecto la consulta que devuelve el <span class="label">scope</span> a la colección en la respuesta de la API.
+
+				<div class="code-block">
+					<span class="purple-code">class</span> <span class="yellow-code">Order</span> <span class="purple-code">extends</span> <span class="green-code">Model</span> <br/>
+					{
+						<div class="code-padding">
+							<span class="comment-code">// ...</span> <br/>
+							<span class="purple-code">public function </span> <span class="yellow-code">scopeDefaultQuery</span> <span class="code-sign">( <span class="blue-code">$query</span> )</span> <br/>
+							{
+								<div class="code-padding">
+									<span class="purple-code">if</span> <span class="code-sign">( <span class="light-code">auth</span>( )-><span class="light-code">user</span>( )-><span class="blue-code">isAdmin</span>( ) )</span><br/>
+									{
+										<div class="code-padding">
+											<span class="purple-code">return </span> <span class="blue-code">$query</span>;
+										</div>
+									} <span class="purple-code">else</span> {
+										<div class="code-padding">
+											<span class="purple-code">return </span> <span class="blue-code">$query</span>-><span class="yellow-code">where</span><span class="code-sign">( <span class="green-code">"user_id"</span> <span class="light-code">, auth</span>( )-><span class="light-code">user</span>( )-><span class="light-code">id</span> )</span>;
+										</div>
+									}
+								</div>
+							}		
+						</div>
+					}
+				</div>
+
+				Los desarroladores que consuman su <span class="label">API</span> igualmente pueden filtrar la coleción desde la url, pero si aplico la consulta por defecto desde su modelo solo podrán filtrar los datos apartir del resultado por defecto que se le indico al <span class="label">OData</span>. no podrán deshacer el filtro por defecto desde la url, solo podrán agregar mas filtros apartir del que ya está definido.
 			</article>
 		</div>
 	</main>
