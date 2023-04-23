@@ -152,6 +152,7 @@ main {
 
 .panel-body ul li ul {
 	list-style: none;
+	border-bottom: 1px solid #dbd1d1;
 }
 
 .panel-body ul li ul li {

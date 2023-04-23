@@ -108,8 +108,21 @@
 					</li>
 					<li class="top-item"> 
 						<a href="#"> 
-							<span class="item-icon">#</span> Parámetros
+							<span class="item-icon">#</span> Serializador
 						</a>
+
+						<ul>
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Usando modelos
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Usando clases
+								</a>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</div>
@@ -316,6 +329,49 @@
 				</div>
 
 				Esta es la estructura que por defecto se devolverá para serializar las respuestas de la API, si desea modificarla puede obtener el resultado que devuelve el <span class="label">odataJsonResponse</span> y luego armar un array con base en los valores que obtuvo. y de está manera puede agregar propiedades adicionales que necesite retornar en cada una de las repuestas de su API.
+				<br/>
+				Otra opción que tiene es usar el metodo <span class="label">odataModelCollection</span> que devuelve la coleción de datos del modelo, igualmente esta coleción toma los filtros que se le indiquen a la <span class="label">API</span> por la url. esto lo puede usar para personalizar la respuesta de su api pero mantienendo el uso del <span class="label">OData</span> en su modelo. también puede agregarle a su respuesta el <span class="label">odataProperties</span> metodo que se encarga de devolver un array con los valores de la respuesta como: código de estado HTTP, cantidad de datos encontrados en la respuesta y demas.
+
+				<div class="code-block">
+					<span class="yellow-code"><xmp><?php</xmp></span>
+					<div class="code-divider"></div>
+
+					<span class="purple-code">namespace</span>
+					<span class="light-code">App\Http\</span><span class="yellow-code">Controllers</span><span class="light-code">;</span>
+
+					<div class="code-divider"></div>
+
+					<span class="purple-code">use </span>App\Models\<span class="yellow-code">User</span>;
+					<div class="code-divider"></div>
+					<span class="purple-code">use </span>App\Http\Controllers\<span class="yellow-code">ApiController</span>;
+
+					<div class="code-divider"></div>
+
+					<span class="purple-code">class</span>
+					<span class="light-code"> UserController </span>
+					<span class="purple-code">extends</span>
+					<span class="green-code">ApiController</span><br/>
+					{
+						<div class="code-padding">
+							<span class="purple-code">public function </span> index <span class="code-sign">( )</span> <br/>
+							{
+								<div class="code-padding">
+									<span class="purple-code">return </span> [
+										<div class="code-padding">
+											<span class="green-code">"collection"</span> <span class="yellow-code"> => </span>
+											<span class="blue-code">$this</span><span class="code-sign">-></span><span class="yellow-code">odataModelCollection</span><span class="code-sign">(</span>
+											<span class="purple-code">new </span><span class="code-sign">User</span>( )<span class="code-sign"> )</span>,<br/>
+											<span class="green-code">"api_info"</span> <span class="yellow-code"> => </span>
+											<span class="blue-code">$this</span><span class="code-sign">-></span><span class="yellow-code">odataProperties</span><span class="code-sign">(</span>
+											<span class="purple-code">new </span><span class="code-sign">User</span>( )<span class="code-sign"> )</span>,<br/>
+											<span class="comment-code">// ...</span>
+										</div>
+									];
+								</div>
+							}
+						</div>
+					}
+				</div>
 			</article>
 
 			<article>
@@ -452,6 +508,94 @@
 				</div>
 
 				Los desarroladores que consuman su <span class="label">API</span> igualmente pueden filtrar la coleción desde la url, pero si aplico la consulta por defecto desde su modelo solo podrán filtrar los datos apartir del resultado por defecto que se le indico al <span class="label">OData</span>. no podrán deshacer el filtro por defecto desde la url, solo podrán agregar mas filtros apartir del que ya está definido.
+			</article>
+
+			<article>
+				<h1> <span class="item-icon">#</span> Serializador </h1>
+				Si bien usar transformadores es una buena idea para armar los objectos de la coleción en sus respuestas de la <span class="label">API</span> puede ver se en el problema de <a href="https://stackoverflow.com/questions/97197/what-is-the-n1-selects-problem-in-orm-object-relational-mapping" target="_blank" class="article-link">N+1</a> que es muy común a la hora de trabajar con un <span class="label">ORM</span>. este problema le puede causar retrazos de velocidad en las repuestas de su <span class="API">API</span> si no tiene en cuenta el número de consultas que realiza a la base de datos por cada objeto.<br/>
+				si tiene una colección de 50 usuarios y en el transformador de cada objeto llama a el rol, el estado, la cuidad, el departamento y su subscripción actual, y esto lo hace por cada usuario tendrá un resultado de <span class="label">50 * 5</span> = <span class="label">250</span> consultas a su base de datos lo que puede volver lenta la respuesta de la API.<br/>
+				si bien laravel ya nos ofrecen una solución usando el metodo <span class="label">with</span> que ya viene con <span class="label">Eloquent</span> y este se encarga de realizar las consultas a la base de datos necesarias para armar su colección y luego la arma desde memoria, para el ejemplo anterior esto va ir reduciendo el número de consultas de <span class="label"> 250 </span> a <span class="label">6</span>. igual debe saber que entre mas compleja sea la consulta mas dificil será de mantener usando un <span class="label">ORM</span> por lo que en casos complejos es mejor optar por utilizar <span class="label">Consultas multitabla, Vistas o Procedimientos almacenados</span>. sin embargo puede hacer uso del scope <span class="label">defaultQuery</span> del <span class="label">OData</span> para llamar el metodo with de eloquent si así lo requiere:
+
+				<div class="code-block">
+					<span class="purple-code">class</span> <span class="yellow-code">User</span> <span class="purple-code">extends</span> <span class="green-code">Model</span> <br/>
+					{
+						<div class="code-padding">
+							<span class="comment-code">// ...</span> <br/>
+							<span class="purple-code">public function </span> <span class="yellow-code">scopeDefaultQuery</span> <span class="code-sign">( <span class="blue-code">$query</span> )</span> <br/>
+							{
+								<div class="code-padding">
+									<span class="blue-code">$query</span> = <span class="blue-code">$query</span>-><span class="yellow-code">with</span><span class="code-sign">(
+										<span class="green-code">"role"</span>,
+										<span class="green-code">"state"</span>,
+										<span class="green-code">"city.department"</span>,
+										<span class="green-code">"subscriptions"</span>
+									);</span> <br/>
+									<span class="purple-code">if</span> <span class="code-sign">( <span class="light-code">auth</span>( )-><span class="light-code">user</span>( )-><span class="blue-code">isAdmin</span>( ) )</span><br/>
+									{
+										<div class="code-padding">
+											<span class="purple-code">return </span> <span class="blue-code">$query</span>;
+										</div>
+									} <span class="purple-code">else</span> {
+										<div class="code-padding">
+											<span class="purple-code">return </span> <span class="blue-code">$query</span>-><span class="yellow-code">where</span><span class="code-sign">( <span class="green-code">"user_id"</span> <span class="light-code">, auth</span>( )-><span class="light-code">user</span>( )-><span class="light-code">id</span> )</span>;
+										</div>
+									}
+								</div>
+							}		
+						</div>
+					}
+				</div>
+
+				<h3># Usando modelos</h3>
+
+				Si bien el metodo <span class="label">with</span> nos ahorra el tener que hacer las consultas a la base de datos una por una y por cada objeto, esto no será util si se encuentra con una consulta compleja que relaciona muchas tablas, en estos casos tenga en cuenta que si su transformador tiene un metodo que hace 10 o mas consultas a la base de datos y eso lo hacer por cada objeto, puede verse en un problema de velocidad en su respuesta. <br/>
+				Para esto puede especificar un serializador dentro de su modelo declarando un metodo llamado <span class="label">odataSerializer</span>, si el <span class="label">OData</span> detecta que este metodo existe en su modelo lo usará para serializar la colección antes de pasarselo al transformador. puede usar esta ventaja para realizar allí las consultas que necesita a su base de datos e ir armando la colección y una vez armada simplemente se la psamos a los transformadores.<br/>
+				de está manera los transformadores ya no se verán obligados a realizar consultas por cada objeto si no simplemente a pintar las propiedades que ya vienen en la colección. un ejemplo de esto podría ser llamar un procedimiento almacenado o una consulta multitabla que devuelva todos los campos de las tablas que se necesitan en la consulta e ir armando la coleción con base en estos valores ejemplo:
+
+				<div class="code-block">
+					<span class="comment-code">// ...</span><br/>
+					<span class="purple-code">class</span> <span class="yellow-code">User</span> <span class="purple-code">extends</span> <span class="green-code">Model</span><br/>
+					{
+						<div class="code-padding">
+							<span class="comment-code">// ...</span><br/>
+							<span class="purple-code">public function</span> <span class="yellow-code">odataSerializer</span> <span class="code-sign">( <span class="blue-code">$collection</span> )</span><br/>
+							{
+								<div class="code-padding">
+									<span class="comment-code">/* llamamos una consulta multitabla compleja que nos devuelva en una sola transacción un calculo procesado.
+									 en este caso pedimos la cantidad de suscripciones que ha comprado el usuario en el ultimo año.
+									 bueno puede que en realidad esta consulta no sea tan compleja entonces piensa en una consulta mas complicada :v <br/>
+									 el punto es que aquí en el serializador se hace una sola consulta a la base de datos que ya nos trae todos los datos que necesitamos 
+									 entonces simplemente le asignamos esos valores a la coleción que nos pasa el OData y ya cuando pase por el transformador no se harán mas consultas a la DB.
+									  */<br/>
+									</span><br/>
+									<span class="blue-code">$query </span> = 
+									<span class="yellow-code">collect</span><span class="code-sign"></span><span class="code-sign">(</span> \<span class="blue-code">DB</span><span class="code-sign">::<span class="yellow-code">select</span>(
+										<span class="green-code">"select users.id as 'user_id', subscriptions.* , user_subscriptions.quantity_subscriptions from users, subscriptions, user_subscriptions where ..."</span>
+									) )</span>;
+									<br/>
+									<span class="blue-code">$users</span> = <span class="blue-code">$collection</span>-><span class="blue-code">map</span><span class="code-sign">(
+										<span class="purple-code">function</span> ( <span class="blue-code">$user</span> ) <span class="purple-code">use</span> ( <span class="blue-code">$query</span> ) {
+										<div class="code-padding">
+											<span class="comment-code">
+												/*la consulta nos devuelve una propiedad con el nombre quantity_subscriptions, cada modelo de usuarios no trae esta propiedad entonces
+												iteramos la colección y  vamos asignando esta propiedad a cada uno de los usuarios de la colección que nos paso el OData por parámetro en el metodo.
+												usando los resultados de la consulta compleja que acabamos de hacer.<br/>
+												de esta manera los transformadores ya no tendrán que hacer consultas a la base de datos para obtener esta propiedad por que ya viene en la coleción.
+												*/
+											</span><br/>
+											<span class="blue-code">$user</span><span class="light-code">->quantity_subscriptions =</span> <span class="blue-code">$query</span>-><span class="yellow-code">where</span><span class="code-sign">( <span class="green-code">"user_id"</span> , <span class="blue-code">$user</span><span class="light-code">->id</span> )</span><span class="light-code">->quantity_subscriptions;</span>
+											<br/>
+											<span class="purple-code">return</span> <span class="blue-code">$user</span>;
+										</div>
+									} )</span>;<br/>
+									<span class="purple-code">return</span> <span class="blue-code">$users</span>;
+								</div>
+							}<br/>
+							<span class="comment-code">// ...</span>
+						</div>
+					}
+				</div>
+
 			</article>
 		</div>
 	</main>
