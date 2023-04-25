@@ -9,23 +9,55 @@ body {
 	background-color: white;
 }
 
+body::-webkit-scrollbar {
+  width: 8px;
+  height: 2px;
+}
+
+body::-webkit-scrollbar-track {
+  background-color: #ffffff;
+}
+
+body::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  border: 1px solid #535358;
+  background-color: #ffffff;
+}
+
 main {
 	width: 100%;
 	margin: auto;
 	display: flex;
 	overflow: hidden;
-	border-radius: 5px;
 	flex-direction: row;
 	background-color: #FFF;
 }
 
 .left-panel {
 	width: 500px;
+	height: 100%;
 	display: flex;
+	overflow: auto;
+	position: fixed;
 	padding-left: 200px;
 	flex-direction: column;
 	background-color: #f4f4ff;
 	border-right: 1px solid #dbd1d1;
+}
+
+.left-panel::-webkit-scrollbar {
+  width: 6px;
+  height: 2px;
+}
+
+.left-panel::-webkit-scrollbar-track {
+  background-color: #f4f4ff;
+}
+
+.left-panel::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    border: 1px solid #a7a7a7;
+    background-color: #f4f4ff;
 }
 
 .panel-header {
@@ -171,6 +203,7 @@ main {
 .doc-main {
 	width: 60%;
 	overflow: hidden;
+	margin-left: 500px;
 	padding: 20px 30px;
 }
 
@@ -221,6 +254,10 @@ article h3 {
 		width: 400px;
 		padding-left: 100px;
 	}
+
+	.doc-main {
+		margin-left: 400px;
+	}
 }
 
 @media screen and (max-width: 1200px) {
@@ -231,5 +268,6 @@ article h3 {
 
 	.doc-main {
 		width: 70%;
+		margin-left: 300px;
 	}
 }

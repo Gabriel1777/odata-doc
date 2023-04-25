@@ -124,6 +124,51 @@
 							</li>
 						</ul>
 					</li>
+
+					<li class="top-item">
+						<a href="#">
+							<span class="item-icon">#</span> Paginación
+						</a>
+					</li>
+
+					<li class="top-item"> 
+						<a href="#"> 
+							<span class="item-icon">#</span> Filtros
+						</a>
+
+						<ul>
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Condicional igual que
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Condicional deferente de
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Condicional like
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Condicional mayor que
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Condicional menor que
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Condicional In
+								</a>
+							</li>
+						</ul>
+					</li>
 				</ul>
 			</div>
 
@@ -646,6 +691,26 @@
 					<span class="comment-code">// ...</span>
 				</div>
 
+			</article>
+
+			<article>
+				<h1> <span class="item-icon">#</span> Paginación</h1>
+
+				Uno de los factores mas influyentes en la velocidad de respuesta de su <span class="label">API</span> está en la paginación, toda aplicación está propensa a crecer desmesuradamente, puede que al inicio tenga que trabajar por ejemplo con un modelo de ordenes, y este tenga en la base de datos almacenedas 50 ordenes. lo cual traer 50 ordenes en una petición no supone ningún problema y no debería tener ningún retrazo en la velocidad de respuesta. <br/>
+				Sin embargo a medida que crece su aplicación y los usuarios empiezan a registrar ordenes puede encontrarse con el caso de tener 50.000 ordenes registradas en su base de datos, traerse estas 50.000 ordenes en una sola petición no solo supone un retrazo en la respuesta de la <span class="label">API</span> si no que renderizar 50.000 datos en una tabla desde el <span class="label">FrontEnd</span> puede también causar un problema en la Memoria de la computadorá del usuario. <br/>
+				Para evitar este tipo de problemas lo que mas se recomienda es usar paginación desde el inicio y por supuesto que puede hacerlo usando el <span class="label">OData</span>. para implementar la paginación usando el <span class="label">OData</span> deberá pasar los parámetros <span class="label">top</span> y <span class="label">page</span> a la url de la ruta donde expuso su modelo usando el metodo <span class="label">odataJsonResponse</span>.
+
+				<div class="cmd-code">https://myapi.com/api/users?top=20&page=1</div>
+
+				El parámetro <span class="label">top</span> indica el número maximo de registros por petición que debe devolver la <span class="label">API</span> en este caso 20 y el parámetro <span class="label">page</span> indica la página que debe traer en este caso la primera. por lo que la anterior consulta deberá traer los usuarios del 1 al 20, el siguiente ejemplo consulta los usuarios del 21 al 40:
+
+				<div class="cmd-code">https://myapi.com/api/users?top=20&page=2</div>
+
+				La siguiente el 41 al 60:
+
+				<div class="cmd-code">https://myapi.com/api/users?top=20&page=3</div>
+
+				y así sucesivamente ...
 			</article>
 		</div>
 	</main>

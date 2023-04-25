@@ -25,3 +25,28 @@ article h3 {
 .panel-body ul li.top-item > a:hover {
 	background-color: #1b1e26;
 }
+
+body {
+	background-color: white;
+}
+
+body::-webkit-scrollbar-track {
+  background-color: #1b1e26;
+}
+
+body::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  border: 1px solid #f4f4ff;
+  background-color: #1b1e26;
+}
+
+
+.left-panel::-webkit-scrollbar-track {
+  background-color: #232730;
+}
+
+.left-panel::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  border: 1px solid #f4f4ff;
+  background-color: #232730;
+}
