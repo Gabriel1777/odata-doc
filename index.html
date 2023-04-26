@@ -167,6 +167,32 @@
 									<span class="item-icon">○</span>Condicional In
 								</a>
 							</li>
+
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Usando and
+								</a>
+							</li>
+
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Usando or
+								</a>
+							</li>
+						</ul>
+					</li>
+
+					<li class="top-item"> 
+						<a href="#"> 
+							<span class="item-icon">#</span> Separando filtros
+						</a>
+
+						<ul>
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Usando select
+								</a>
+							</li>
 						</ul>
 					</li>
 				</ul>
@@ -711,6 +737,157 @@
 				<div class="cmd-code">https://myapi.com/api/users?top=20&page=3</div>
 
 				y así sucesivamente ...
+			</article>
+
+			<article>
+				<h1> <span class="item-icon">#</span> Filtros</h1>
+
+				Como se menciono al inicio, las rutas de su <span class="label">API</span> no solamente devuelven los datos de una base de datos si no que también deben filtrar estos datos según la necesidad de la logica de negocio. por ejemplo si está exponiendo un modelo de usuarios puede que necesite filtrarlos ya sea por ciudad, por rol, por estado o por muchas mas opciones, esto lo puede llevar a tener un monton de rutas con filtros especificos solo para los usuarios lo cual extiende mucho mas los tiempos de desarrollo. <br/> 
+
+				Con el <span class="label">OData</span> puede mantener una sola ruta para su modelo y empezar a agregar filtros desde la url, esto le permite olvidarse de tener que programar cada filtro que necesite en su <span class="label">API</span> a demas de que le da la posibilidad a los desarroladores <span class="label">Frontend</span> jugar un poco mas con las rutas de su <span class="label">API</span> y no depender de usted como desarrolador <span class="label">Backend</span> cada vez que necesiten un filtro especifico. <br/>
+
+				Para empezar a aplicar filtros no olvide que debe crear un ruta que apunte a un metodo en su controlador y este metodo debe exponer el <span class="label">odataJsonResponse</span>. una vez tenga esto ya estará listo para empezar agregar filtros desde su api. <br/>
+
+				Por ultimo debe saber que el <span class="label">OData</span> filtrará los datos con base en los campos de la tabla en su base de datos mas no en los campos que declaro en su transformador, esto se mantiene así para poder escalar usando consultar mas complejas que incluyen <span class="label">inner joins</span> entonces es una muy buena idea que el nombre de los campos en su transformador sean fieles a los nombre de los campos que tiene en la base de datos, ya que podría confundir a los desarroladores que consumen su <span class="label">API</span>. <br/>
+
+				Para ayudarlo a comprender mejor los siguientes casos de uso tome como ejemplo un modelo de usuarios que se expone usando el metodo <span class="label">odataJsonResponse</span> a travez de la ruta <span class="label">https://myapi.com/api/users</span> y que devuelve una respuesta como esta:
+
+				<div class="code-block">
+					{
+						<div class="code-padding">
+							<span class="green-code">"data"</span> : [
+							<div class="code-padding">
+								<span class="green-code">"data"</span> : [
+									<div class="code-padding">
+										{
+											<div class="code-padding">
+												<span class="green-code">"id"</span> : <span class="code-sign">1</span>,<br/>
+												<span class="green-code">"name"</span> : <span class="green-code">"example user"</span>,<br/>
+												<span class="green-code">"role_id"</span> : <span class="code-sign"> 2 </span> ,<br/>
+												<span class="green-code">"state_id"</span> : <span class="code-sign"> 1 </span> ,<br/>
+												<span class="green-code">"city_id"</span> : <span class="code-sign"> 12 </span> ,<br/>
+												<span class="comment-code">// ...rest</span>
+											</div>
+										}, <br/>
+										{
+											<div class="code-padding">
+												<span class="green-code">"id"</span> : <span class="code-sign">2</span>,<br/>
+												<span class="comment-code">// ...rest</span>
+											</div>
+										}
+									</div>
+								], <br/>
+								<span class="green-code">"length"</span> : <span class="code-sign">2</span> <span class="comment-code">// número de registro en la colección</span>
+							</div>
+							],<br/>
+							<span class="green-code">"code"</span> : <span class="yellow-code">200</span>
+						</div>
+					}
+					</span>
+				</div>
+
+				<h3> # Condicional igual que </h3>
+
+				Para filtrar datos de que cumplan con una condicional exacta puede espeficiar el nombre del atributo segudo de <span class="label">:</span> y seguido del valor con el que debe cumplir. un ejemplo de un filtro que trae los usuarios que vivien en la ciuedad con id <span class="label">2</span>.
+
+				<div class="cmd-code">https://myapi.com/api/users?filter=city_id:2</div> 
+
+				Esto lo puede aplicar con cualquier atributo de su tabla, pero tenga en cuenta de que si usa el operador <span class="label">:</span> se filtrarán solo los datos que cumplan con la condición exacta por lo que si desea filtrar usando por ejemplo el nombre deberá pasar el nombre exacto incluyendo mayuscula y minusculas ejemplo:
+
+				<div class="cmd-code">https://myapi.com/api/users?filter=name:Pepito Peréz</div>
+
+				<h3> # Condicional diferente de </h3>
+
+				Si desea aplicar la invarsa de igual que para en lugar de obtener los datos que cumplan con una condición en especifico, mas bien anular los registros que no cumplan con una condición especifica puede usar el operador <span class="label">!</span> que en este caso funciona igual que el operador <span class="label">!=</span> que se usa por ejemplo en el <span class="label">if</span>. un ejemplo de una consulta de usuario donde el id sea diferente a <span class="label">13</span>, esto nos traera todos los usuarios menos el del id 13:
+
+				<div class="cmd-code">https://myapi.com/api/users?filter=id!13</div>
+
+				<h3># Condicional like</h3>
+
+				Con la condicional igual que podemos filtrar datos que cumplen una condición exacta pero si lo que desea es filtrar por coincidencia en lugar de usar el operado <span class="label">:</span> puede usar el operado <span class="label">/</span> esto lo que hará es filtrar los usuarios por coincidencia por ejemplo en el caso de <span class="label">Pepito Peréz</span> podemos filtrarlo pasando nomas <span class="label">pepito</span> y en minuscula obviamente esto nos traerá otros usuarios que tengan igualmente en su nombre pepito ejemplo:
+
+				<div class="cmd-code">https://myapi.com/api/users?filter=name/pepito</div>
+
+				<h3># Condicional mayor que</h3>
+
+				Puede filtrar datos númeroricos que sean mayores a una valor especifico usando el operador <span class="label">></span> por ejemplo esta sería una consulta que trae todos los usuarios con el id mayor a 10:
+
+				<div class="cmd-code">https://myapi.com/api/users?filter=id>10</div>
+
+				también puede aplicar este filtro usando fechas:
+
+				<div class="cmd-code">https://myapi.com/api/users?filter=created_at>2023-04-25</div>
+
+				<h3># Condicional menor que </h3>
+
+				al igual que el operador <span class="label">></span> puede usar el operador <span class="label"><</span> . funciona igual solo que en lugar de filtrar datos mayores a cierto valor filtrará los datos que sean menores a lo especificado:
+
+				<div class="cmd-code">https://myapi.com/api/users?filter=id<10</div>
+
+				igualmente puede aplicar fechas de esta manera:
+
+				<div class="cmd-code">https://myapi.com/api/users?filter=created_at<2023-04-25</div>
+
+				<h3># Condicional in</h3>
+
+				Puede filtrar datos que se encuentren en un rango de valores especificos usando la condificional <span class="label">in</span> , un ejemplo podría ser una consulta de los usuarios que tengan en su id un número del uno al 10 ejemplo:
+
+				<div class="cmd-code">https://myapi.com/api/users?filter=id[1-2-3-4-5-6-7-8-9-10]</div>
+
+				en este caso se usa el separador <span class="label">-</span> para separar los valores que se tendrán en cuenta al filtrar los datos. no se usa <span class="label">,</span> ya que la coma tiene otra funcionalidad reservada. igualmente puede filtrar no solamente usando números si no también letras ejemplo:
+
+				<div class="cmd-code">https://myapi.com/api/users?filter=name[Pepito Peréz-Pepito Lopéz]</div>
+
+				<h3># Usando and</h3>
+
+				Si bien puede filtrar los datos de su <span class="label">API</span> usando diferentes tipos de operadores es logico pensar que necesite aplicar mas de un filtro a la vez, un ejemplo podría ser una consulta de los usuarios que viven en la ciudad con id 5 y que tengan el rol con id 3. para aplicar una consulta como esta solo tiene que separar los filtros que ya aprendio anteriormente por una <span class="label">,</span> entonces el filtro nos quedaría de esta manera:
+
+				<div class="cmd-code">https://myapi.com/api/users?filter=city_id:5,role_id:3</div>
+
+				pueda agregar tantos filtros al tiempo como guste solo debe separarlos por <span class="label">,</span> y el <span class="label">OData</span> filtrará los datos que cumplan todas las condicionales que se le pasarón por url, un ejemplo mas:
+
+				<div class="cmd-code">https://myapi.com/api/users?filter=id[1-2-3],created_at>2023-04-25,role_id!2</div>
+
+				<h3># Usando or</h3>
+
+				al igual que con <span class="label">and</span> puede aplicar multiples filtros a la vez pero en lugar de separlos usando <span class="label">,</span> tendrá que separarlos usando <span class="label">|</span> . en este caso el <span class="label">OData</span> no filtrará los usuarios que cumplan con todos los filtros pasados a la url si no que filtrará los usuarios que cumplan con alguno de ellos, no es necesario que cumpla con todas las reglas le bastará solo con cumplir una. un ejemplo podría ser una consulta a los usuarios que viven en la ciudad con id 1 o con id 2:
+
+				<div class="cmd-code">https://myapi.com/api/users?filter=city_id:1|city_id:2</div>
+
+				igualmente puede agregar tantos filtros como desee en la url simplemente debe separarlos por <span class="label">|</span> , un ejemplo mas:
+
+				<div class="cmd-code">https://myapi.com/api/users?filter=role_id:1|role_id:2|city_id:5|city_id:7|id[1-2-3-4-5]</div>
+
+			</article>
+
+			<article>
+				<h1> <span class="item-icon">#</span> Separando filtros</h1>
+
+				Si bien puede separar sus filtros usando <span class="label">and</span> u <span class="label">or</span> debe saber que no debe mezclar estás 2 condicionales en una sola consulta por ejemplo la siguiente consulta no funcionará:
+
+				<div class="cmd-code">https://myapi.com/api/users?filter=id:1|id:2,role_id:3</div>
+
+				En este caso se están aplicando tanto el separador <span class="label">,</span> como el <span class="label">|</span> lo cual generará conflictos en la consulta a la base de datos, esto no es un problema del <span class="label">OData</span> si no mas bien un problema de separación de condicionales en <span class="label">SQL</span>. si realiza este tipo de consulta no obtendrá ningún tipo de error pero puede que el filtro simplemente falle y no traiga los datos que usted solicito. <br/> <br/>
+
+				<h3># Usando select</h3>
+
+				puede separar sus filtros usando el parámetro <span class="label">select</span> que actua como un filtrado del resultado de <span class="label">filter</span> por lo que primero se filtrarán los datos usando las condicionales pasadas a <span class="label">filter</span> y encima de ese resultado se aplica los filtros enviados por <span class="label">select</span> esto en <span class="label">SQL</span> es equivalente a hacer un <span class="label">select * from (select ...)</span> es decir una consulta sobre otra consulta. <br/>
+				<span class="label">select</span> funciona exactamente igual que filter usa los mismos operadores y los mismos separadores <span class="label">and</span> y <span class="label">or</span> ejemplo:
+
+				<div class="cmd-code">https://myapi.com/api/users?select=id[1-2-3],role_id:5</div>
+				<div class="cmd-code">https://myapi.com/api/users?select=city_id:7|id<10</div>
+
+				puede usar esta ventaja para poner sus filtros tipo <span class="label">and</span> por ejemplo en el parámetro <span class="label">filter</span> y los filtros tipo <span class="label">or</span> en el parámetro <span class="label">select</span> ejemplo:
+
+				<div class="cmd-code">https://myapi.com/api/users?filter=role_id:3,state_id:1&select=id:1|id:2</div>
+
+				o puede hacerlo al reves para que <span class="label">filter</span> maneje los filtros topo <span class="label">or</span> y <span class="label">select</span> los filtros tipo <span class="label">and</span> ejemplo:
+
+				<div class="cmd-code">https://myapi.com/api/users?filter=id:1|id:2&select=role_id:3,state_id:1</div>
+
+				el punto es que de está manera separamos las condicionales, evitamos conflictos de parentesis en las consultas de la base de datos y nos aseguramos de que el filtro funcione correctamente y devuelva los datos según lo que se necesita. <br/>
+
+				si bien <span class="label">select</span> es un sobre filtro del resultado que arroja <span class="label">filter</span> debe tener en cuenta que <span class="label">filter</span> es mas poderoso que <span class="label">select</span> y que con <span class="label">filter</span> podemos hacer consultas incluyendo <span class="label">inner joins</span> lo cual no se puede hacer con <span class="label">select</span>. tenga esto en cuenta al momento de decidir a quien asignarle las reponsabilidad del filtro por tipo <span class="label">or</span> o <span class="label">and</span>.
 			</article>
 		</div>
 	</main>
