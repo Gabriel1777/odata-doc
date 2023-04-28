@@ -249,6 +249,28 @@ article h3 {
 	margin: 10px 0;
 }
 
+
+table, th, td {
+  	border-collapse: collapse;
+	border: 1px solid #dbd1d1;
+}
+
+th, td {
+	width: 100%;
+	padding: 5px 10px;
+}
+
+table {
+	border: 0px;
+	min-width: 100px;
+	min-height: 200px;
+	margin-right: 20px;
+}
+
+.inline-block {
+	display: inline-block;
+}
+
 @media screen and (max-width: 1500px) {
 	.left-panel {
 		width: 400px;

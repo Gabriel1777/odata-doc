@@ -195,6 +195,26 @@
 							</li>
 						</ul>
 					</li>
+
+					<li class="top-item"> 
+						<a href="#"> 
+							<span class="item-icon">#</span> Consultas anidadas
+						</a>
+
+						<ul>
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Inner joins
+								</a>
+							</li>
+
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Usando alias
+								</a>
+							</li>
+						</ul>
+					</li>
 				</ul>
 			</div>
 
@@ -284,7 +304,7 @@
 					}
 				</div>
 
-				Como puedes darte cuenta se trata de una simple clase que hereda a <span class="label">Controller</span> y esta implementa el trait de <span class="label">ODataResponse</span> que se encarga de cargar todos los metodos de <span class="label">OData</span> dentro de la clase.
+				Como puede darse cuenta se trata de una simple clase que hereda a <span class="label">Controller</span> y esta implementa el trait de <span class="label">ODataResponse</span> que se encarga de cargar todos los metodos de <span class="label">OData</span> dentro de la clase.
 				<br/><br/>
 
 				<h3># Crear Controladores</h3>
@@ -366,7 +386,7 @@
 					} <br/>
 				</div>
 
-				Listo, esto es lo que necesitamos para implementar el <span class="label">OData</span> en una aplicación de laravel. lo siguiente que debes hacer es crear una ruta que apunte al metodo index de tu controlador y una vez realices una solicitud HTTP a esta ruta el <span class="label">OData</span> ya se encargará de generar la estructura de la respuesta en json, el código de estado HTTP junto con la colección de datos. un ejemplo de respuesta sería esta:
+				Listo, esto es lo que necesitamos para implementar el <span class="label">OData</span> en una aplicación de laravel. lo siguiente que debe hacer es crear una ruta que apunte al metodo index de tu controlador y una vez realices una solicitud HTTP a esta ruta el <span class="label">OData</span> ya se encargará de generar la estructura de la respuesta en json, el código de estado HTTP junto con la colección de datos. un ejemplo de respuesta sería esta:
 
 				<div class="code-block">
 					{
@@ -804,13 +824,13 @@
 
 				<h3># Condicional like</h3>
 
-				Con la condicional igual que podemos filtrar datos que cumplen una condición exacta pero si lo que desea es filtrar por coincidencia en lugar de usar el operado <span class="label">:</span> puede usar el operado <span class="label">/</span> esto lo que hará es filtrar los usuarios por coincidencia por ejemplo en el caso de <span class="label">Pepito Peréz</span> podemos filtrarlo pasando nomas <span class="label">pepito</span> y en minuscula obviamente esto nos traerá otros usuarios que tengan igualmente en su nombre pepito ejemplo:
+				Con la condicional igual que podemos filtrar datos que cumplen una condición exacta pero si lo que desea es filtrar por coincidencia en lugar de usar el operador <span class="label">:</span> puede usar el operador <span class="label">/</span> esto lo que hará es filtrar los usuarios por coincidencia por ejemplo en el caso de <span class="label">Pepito Peréz</span> podemos filtrarlo pasando nomas <span class="label">pepito</span> y en minuscula obviamente esto nos traerá otros usuarios que tengan igualmente en su nombre pepito ejemplo:
 
 				<div class="cmd-code">https://myapi.com/api/users?filter=name/pepito</div>
 
 				<h3># Condicional mayor que</h3>
 
-				Puede filtrar datos númeroricos que sean mayores a una valor especifico usando el operador <span class="label">></span> por ejemplo esta sería una consulta que trae todos los usuarios con el id mayor a 10:
+				Puede filtrar datos númeroricos que sean mayores a un valor especifico usando el operador <span class="label">></span> por ejemplo esta sería una consulta que trae todos los usuarios con el id mayor a 10:
 
 				<div class="cmd-code">https://myapi.com/api/users?filter=id>10</div>
 
@@ -887,7 +907,162 @@
 
 				el punto es que de está manera separamos las condicionales, evitamos conflictos de parentesis en las consultas de la base de datos y nos aseguramos de que el filtro funcione correctamente y devuelva los datos según lo que se necesita. <br/>
 
-				si bien <span class="label">select</span> es un sobre filtro del resultado que arroja <span class="label">filter</span> debe tener en cuenta que <span class="label">filter</span> es mas poderoso que <span class="label">select</span> y que con <span class="label">filter</span> podemos hacer consultas incluyendo <span class="label">inner joins</span> lo cual no se puede hacer con <span class="label">select</span>. tenga esto en cuenta al momento de decidir a quien asignarle las reponsabilidad del filtro por tipo <span class="label">or</span> o <span class="label">and</span>.
+				si bien <span class="label">select</span> es un sobre filtro del resultado que arroja <span class="label">filter</span> debe tener en cuenta que <span class="label">filter</span> es mas poderoso que <span class="label">select</span> y que con <span class="label">filter</span> podemos hacer consultas incluyendo <span class="label">inner joins</span> lo cual no se puede hacer con <span class="label">select</span>. tenga esto en cuenta al momento de decidir a quien asignarle la responsabilidad del filtro por tipo <span class="label">or</span> o <span class="label">and</span>.
+			</article>
+
+			<article>
+				<h1> <span class="item-icon">#</span> Consultas anidadas</h1>
+
+				Uno de los casos mas comunes a la hora filtrar datos en una base de datos es hacer consultas multitabla o <span class="label">Inner joins</span> para poder filtrar por ejemplo usuarios con base en datos almacenados en otras tablas, un ejemplo podría ser una tabla de peliculas que tiene las siguientes relaciones en la base de datos:
+
+				<div class="code-block">
+					<table class="inline-block">
+						<thead>
+							<th>movies</th>
+						</thead>
+						<tbody>
+							<tr>
+								<td>id</td>
+							</tr>
+							<tr>
+								<td>name</td>
+							</tr>
+							<tr>
+								<td>description</td>
+							</tr>
+							<tr>
+								<td>category_id</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<table class="inline-block">
+						<thead>
+							<th>categories</th>
+						</thead>
+						<tbody>
+							<tr>
+								<td>id</td>
+							</tr>
+							<tr>
+								<td>name</td>
+							</tr>
+							<tr>
+								<td>state_id</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<table class="inline-block">
+						<thead>
+							<th>states</th>
+						</thead>
+						<tbody>
+							<tr>
+								<td>id</td>
+							</tr>
+							<tr>
+								<td>name</td>
+							</tr>
+						</tbody>
+					</table>
+
+				</div>
+
+				<h3># Inner Joins </h3>
+
+				En este caso la tabla movies se relaciona con categories atravéz de la foranea <span class="label">category_id</span> y categories se relaciona con states atravéz de la foranea <span class="label">state_id</span>. aunque en el <span class="label">OData</span> oficialmente los inner joins no están disponibles es posible solictar inner joins en este paquete usando un filtro desde la url. <br/>
+				En el caso de que quiera filtrar las peliculas por categoría puede hacerlo normalmente usando la foranea <span class="label">category_id</span> aplicandola en un filtro normal ejemplo:
+
+				<div class="cmd-code">
+					https://myapi.com/api/movies?filter=category_id:1
+				</div>
+
+				Sin embargo en el caso de que quiera filtrar las peliculas por el nombre de la categoría tendrá que aplicar un inner join para poder acceder al nombre de la categoría. en este caso el filtro se aplica igual con la diferencia de que debe especificar el nombre de las tablas concatenadas por un punto ejemplo:
+
+				<div class="cmd-code">
+					https://myapi.com/api/movies?filter=categories.name:Infantil
+				</div>
+
+				Es mas común que intente filtrar por nombre usando coincidencia mas no equivalencia entonces el filtro mas cumún podría verse así para el caso de un buscador:
+
+				<div class="cmd-code">
+					https://myapi.com/api/movies?filter=categories.name/Infan
+				</div>
+
+				Puede anidar tantas tablas como necesite solo debe separarlas pur un punto, una consulta mas anidad por ejemplo podía se filtrar las peliculas cuya categoría tengas el estado con nombre <span class="label">habilitado</span> en este caso la url nos quedaría así:
+
+				<div class="cmd-code">
+					https://myapi.com/api/movies?filter=categories.states.name:habilitado
+				</div>
+
+				<h3>Usando alias</h3>
+
+				Si bien el <span class="label">OData</span> en este caso nos permite hacer consultas mas complejas utilizando inner joins es verdad que el hecho de tener que pasar el nombre de la tabla por url puede ser confuso para los desarroladores <span class="label">Frontend</span> ya que lo mas probable es que ellos no conozcan el nombre de las tablas de su base de datos y por ende no sepan como realizar el filtro. <br/>
+				para solucionar este problema usted puede agregarle alias a sus tablas para que el <span class="label">OData</span> identifique la tabla a la que se hace referencia incluso si se pasa un nombre completamente distinto desde la url, sin embrago debe tener en cuenta que de igual manera los desarroladores <span class="label">Frontend</span> deben tener una referencia de las relaciones en la respuesta de su <span class="label">API</span>, por ejemplo continuando con el ejemplo anterior usted podría devolver por cada objeto de su transformador algo como esto:
+
+				<div class="code-block">
+					[
+						<div class="code-padding">
+							{
+								<div class="code-padding">
+									<span class="green-code">"id"</span> : <span class="code-sign">1</span>,<br/>
+									<span class="green-code">"name"</span> : <span class="green-code">"movie 1"</span>,<br/>
+									<span class="green-code">"description"</span> : <span class="green-code">"descripction of movie"</span>,<br/>
+									<span class="green-code">"category_id"</span> : <span class="code-sign">1</span>,<br/>
+									<span class="green-code">"category"</span> : {
+										<div class="code-padding">
+											<span class="green-code">"id"</span> : <span class="code-sign">1</span>, <br/>
+											<span class="green-code">"name"</span> : <span class="green-code">acción</span>, <br/>
+											<span class="green-code">"state_id"</span> : <span class="code-sign">1</span>, <br/>
+											<span class="green-code">"state"</span> : {
+												<div class="code-padding">
+													<span class="green-code">"id"</span> : <span class="code-sign">1</span> <br/>
+													<span class="green-code">"name"</span> : <span class="green-code">"habilitado"</span> <br/>
+												</div>
+											}
+										</div>
+									}
+								</div>
+							}, <br/>
+							{
+								<div class="code-padding">
+									<span class="comment-code">// rest data ...</span>
+								</div>
+							}
+						</div>
+					]
+				</div>
+
+				En este caso lo mas probable es que el desarrolador <span class="label">Frontend</span> intente filtrar según lo que el ve en la respuesta de la <span class="label">API</span>. entonces si quiere filtrar por el nombre del estado de la categoría lo que tendría mas sentido es que la url quedará de esta manera:
+
+				<div class="cmd-code">
+					https://myapi.com/api/movies?filter=category.state.name:habilitado
+				</div>
+
+				Si se da cuenta es lo mismo que nombrar las tablas aniadadas como lo hicimos anteriormente <span class="label">filter=categories.states.name:habilitado</span> sin embargo para que esto funcione en singular como está en la respuesta de su <span class="label">API</span> deberá agregar alias a sus tablas. para hacer esto cree un <span class="label">config/odata.php</span> en su proyecto que devulva un array con la configuración que requiere el <span class="label">OData</span> para usar los alias, no olvide que la carpeta <span class="label">config</span> ya viene por defecto creada en su proyecto junto con otros archivos de configuración como <span class="label">app.php</span> , <span class="label"> auth.php</span> etc ... <br/> en este caso solo tendrá que crear un archivo llamado <span class="label">odata.php</span> junto con la siguiente configuración de ejemplo:
+
+				<div class="code-block">
+					<xmp> <?php </xmp>
+					<div class="code-divider"></div>
+					<span class="purple-code">return</span> [
+						<div class="code-padding">
+							<span class="green-code">"singular"</span> <span class="yellow-code">=></span> [
+								<div class="code-padding">
+									<span class="green-code">"category"</span> <span class="yellow-code">=></span> <span class="green-code">"categories"</span> , <br/>
+									<span class="green-code">"state"</span> <span class="yellow-code">=></span> <span class="green-code">"states"</span> , <br/>
+									<span class="comment-code">"alias de la tabla" => "nombre de la tabla"</span>
+								</div>
+							]
+						</div>
+					];
+				</div>
+
+				y listo esto es todo lo que tiene que hace para agregar alias a sus tablas, por ultimo no olvide que puede igualmente usar todos los operadores y las condicionales <span class="label">and</span> y <span class="label">or</span> que usa en sus filtros normales en los inner joins un ejemplo:
+
+				<div class="cmd-code">
+					https://myapi.com/api/movies?filter=category.state.name:habilitado|category.state.name:activado|category.name:acción
+				</div>
 			</article>
 		</div>
 	</main>
