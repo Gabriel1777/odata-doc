@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head lang="es">
 	<title>Laravel OData</title>
+	<link rel="icon" href="images/laravel.png">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet"/>
 
@@ -214,6 +215,25 @@
 								</a>
 							</li>
 						</ul>
+					</li>
+
+					<li class="top-item"> 
+						<a href="#"> 
+							<span class="item-icon">#</span> Exportando datos
+						</a>
+						<ul>
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Usando laravel excel
+								</a>
+							</li>
+						</ul>
+					</li>
+
+					<li class="top-item"> 
+						<a href="#"> 
+							<span class="item-icon">#</span> Modo personalizado
+						</a>
 					</li>
 				</ul>
 			</div>
@@ -990,7 +1010,7 @@
 					https://myapi.com/api/movies?filter=categories.name/Infan
 				</div>
 
-				Puede anidar tantas tablas como necesite solo debe separarlas pur un punto, una consulta mas anidad por ejemplo podía se filtrar las peliculas cuya categoría tengas el estado con nombre <span class="label">habilitado</span> en este caso la url nos quedaría así:
+				Puede anidar tantas tablas como necesite solo debe separarlas pur un punto, una consulta mas anida por ejemplo podía ser filtrar las peliculas cuya categoría tenga el estado con nombre <span class="label">habilitado</span> en este caso la url nos quedaría así:
 
 				<div class="cmd-code">
 					https://myapi.com/api/movies?filter=categories.states.name:habilitado
@@ -1013,7 +1033,7 @@
 									<span class="green-code">"category"</span> : {
 										<div class="code-padding">
 											<span class="green-code">"id"</span> : <span class="code-sign">1</span>, <br/>
-											<span class="green-code">"name"</span> : <span class="green-code">acción</span>, <br/>
+											<span class="green-code">"name"</span> : <span class="green-code">"acción"</span>, <br/>
 											<span class="green-code">"state_id"</span> : <span class="code-sign">1</span>, <br/>
 											<span class="green-code">"state"</span> : {
 												<div class="code-padding">
@@ -1063,6 +1083,130 @@
 				<div class="cmd-code">
 					https://myapi.com/api/movies?filter=category.state.name:habilitado|category.state.name:activado|category.name:acción
 				</div>
+			</article>
+
+			<article>
+				<h1> <span class="item-icon">#</span> Exportando datos</h1>
+
+				Una de las funcionalidades mas comunes en una <span class="label">API</span> es la exportación de datos ya sea en <span class="label">CSV</span> , <span class="label">Excel</span> o cualquier otro medio donde se puedan descargar. <a href="https://laravel-excel.com/" class="article-link" target="_blank">maatwebsite/excel</a> ofrece una librería muy completa para manejar la exportación de datos en laravel, este paquete de <span class="label">OData</span> es completamente compatible con laravel-excel. puede usar esta ventaja para exportar colecciones en <span class="label">CSV</span> por ejemplo pero manteniendo el uso del <span class="label">OData</span> para poder filtrar y ordenar los datos en su archivo de <span class="label">EXCEL</span>. <br/><br/>
+
+				<h3># Usando laravel excel</h3>
+				Para empezar instale el paquete de <a href="https://laravel-excel.com/" class="article-link" target="_blank">maatwebsite/excel</a> en su proyecto y luego cree una clase de tipo export para su modelo de esta manera: <br/>
+
+				<div class="cmd-code">
+					php artisan make:export UserExport
+				</div>
+
+				Esto debio crearle un <span class="label">app/Exports/UserExport.php</span> archivo en su proyecto. lo siguiente que debe hacer es agregar un constructor dentro de la clase que resiva la coleción que le pasará a el <span class="label">OData</span> y usar esta coleción para armar las propiedades de su archivo. la coleción que pasa el <span class="label">OData</span> al constructor es la coleción procesada con los filtros, paginación y demas instrucciones que hayan pasado a la url.
+
+				<div class="code-block">
+					<xmp><?php</xmp>
+					<div class="code-divider"></div>
+					<span class="purple-code">namespace</span> App\Exports;
+					<br/><br/>
+					<span class="purple-code"> use </span>App\Models\<span class="yellow-code">User</span>;<br/>
+					<span class="purple-code"> use </span>Illuminate\Support\<span class="yellow-code">Collection</span>;<br/>
+					<span class="purple-code"> use </span>Illuminate\Support\Facades\<span class="yellow-code">DB</span>;<br/>
+					<span class="purple-code"> use </span>Maatwebsite\Excel\Concerns\<span class="yellow-code">WithTitle</span>;<br/>
+					<span class="purple-code"> use </span>Maatwebsite\Excel\Concerns\<span class="yellow-code">Exportable</span>;<br/>
+					<span class="purple-code"> use </span>Maatwebsite\Excel\Concerns\<span class="yellow-code">WithMapping</span>;<br/>
+					<span class="purple-code"> use </span>Maatwebsite\Excel\Concerns\<span class="yellow-code">WithHeadings</span>;<br/>
+					<span class="purple-code"> use </span>Maatwebsite\Excel\Concerns\<span class="yellow-code">ShouldAutoSize</span>;<br/>
+					<span class="purple-code"> use </span>Maatwebsite\Excel\Concerns\<span class="yellow-code">FromCollection</span>;<br/>
+					<br/>
+					<span class="purple-code">class</span> <span class="yellow-code">UserExport</span> <span class="purple-code">implements</span>
+					<span class="code-sign"> FromCollection</span>, 
+					<span class="code-sign"> ShouldAutoSize</span>, 
+					<span class="code-sign"> WithTitle</span>, 
+					<span class="code-sign"> WithMapping</span>, 
+					<span class="code-sign"> WithHeadings</span> <br/>
+					{
+						<div class="code-padding">
+							<span class="purple-code">use</span> <span class="code-sign">Exportable</span>; <br/><br/>
+							<span class="purple-code">private</span> collection; <br/> <br/>
+							
+							<span class="purple-code">public function</span> <span class="green-code">__construct</span><span class="code-sign">( <span class="yellow-code">Collection</span> <span class="blue-code">$collection</span> )</span>
+							{
+								<div class="code-padding">
+									<span class="blue-code">$this</span><span class="code-sign">-></span>collection <span class="yellow-code">=</span> <span class="blue-code">$collection</span>;
+								</div>
+							} <br/> <br/>
+
+							<span class="purple-code">public function</span> <span class="yellow-code">collection</span><span class="code-sign">( )</span>
+							{
+								<div class="code-padding">
+									<span class="purple-code">return</span> <span class="blue-code">$this</span><span class="code-sign">-></span>collection;
+								</div>
+							} <br/> <br/>
+
+							<span class="purple-code">public function</span> <span class="yellow-code">title</span><span class="code-sign">( )</span> : <span class="code-sign">string</span>
+							{
+								<div class="code-padding">
+									<span class="purple-code">return</span> <span class="green-code">"Usuarios"</span>;
+								</div>
+							} <br/> <br/>
+
+							<span class="purple-code">public function</span> <span class="yellow-code">map</span><span class="code-sign">( <span class="blue-code">$user</span> )</span> : <span class="code-sign">array</span>
+							{
+								<div class="code-padding">
+									<span class="purple-code">return</span> [ 
+										<div class="code-padding"> <span class="comment-code">//...</span> </div>
+									];
+								</div>
+							} <br/> <br/>
+
+							<span class="purple-code">public function</span> <span class="yellow-code">headings</span><span class="code-sign">( )</span> : <span class="code-sign">array</span>
+							{
+								<div class="code-padding">
+									<span class="purple-code">return</span> [ 
+										<div class="code-padding"> <span class="comment-code">//...</span> </div>
+									];
+								</div>
+							}
+						</div>
+					<br/>}
+				</div>
+
+				Una vez creada su clase de exportación simplemente agregue la propiedad <span class="label">export</span> a su modelo indicando la clase que debe usar para exportar los datos en un archivo excel ejemplo:
+
+				<div class="code-block">
+					<span class="comment-code">// ...</span><br/>
+					<span class="purple-code">use </span> App\Exports\<span class="yellow-code">UserExport</span>;<br/><br/>
+					<span class="purple-code">class</span> <span class="yellow-code">User</span> <span class="purple-code">extends</span> <span class="green-code">Model</span>
+					{
+						<div class="code-padding">
+							<span class="comment-code">// ...</span><br/>
+							<span class="purple-code">public</span> <span class="blue-code">$export</span> <span class="code-sign">=</span> [
+								<div class="code-padding">
+									<span class="green-code">"instance"</span> <span class="yellow-code">=></span> <span class="blue-code">UserExport</span><span class="code-sign">::</span><span class="yellow-code">class</span>, <span class="comment-code">// clase para exportar datos</span> <br>
+									<span class="green-code">"fileName"</span> <span class="yellow-code">=></span> <span class="green-code">"Usuarios.xlsx"</span> <span class="comment-code">// nombre del archivo excel </span>
+								</div>
+							];<br/>
+							<span class="comment-code">// ...</span>
+						</div>
+					} <br/>
+					<span class="comment-code">// ...</span>
+				</div>
+
+				Con esto configurado lo unico que tiene que hacer es usar la ruta que apunta a un metodo de su controlador que ya expone el metodo de <span class="label">odataJsonResponse</span> y a esta url debe agregarle el parámetro <span class="label">export</span> para indicarle al <span class="label">OData</span> de que devuelva los datos en un archivo excel ejemplo:
+
+				<div class="cmd-code">
+					https://myapi.com/api/users?export
+				</div>
+
+				de igual manera puede aplicar, filtros, paginación, ordenamiento de datos y demas para indicarle al <span class="label">OData</span> que datos debe cargar en el archivo excel un ejemplo aplicando un filtro:
+
+				<div class="cmd-code">
+					https://myapi.com/api/users?export&filter=role_id:2,state_id:1
+				</div>
+
+			</article>
+
+			<article>
+				<h1> <span class="item-icon">#</span> Modo personalizado</h1>
+
+				Por ultimo debe saber que no debe sentirse atado a usar el metodo <span class="label">odataJsonResponse</span> y retornarlo directamente desde su controlador, si desea puede usar el metodo <span class="label">odataModelCollection</span> que ya se menciono anteriormente, para obtener unicamente la coleción del modelo con todos los filtros paginación y demas aplicados sobre este. de esta manera usted puede personalizar sus respuestas de la <span class="label">API</span>, los paquete que usa para exportar datos y demas. <br/>
+				Este paquete puedes encontrarlo en github como <a href="https://github.com/Gabriel1777/laravel-odata" class="blue-link" target="_blank">Gabriel1777/laravel-odata</a>.
 			</article>
 		</div>
 	</main>

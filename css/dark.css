@@ -18,6 +18,10 @@ article h3 {
 	color: #9e9ee5;
 }
 
+.blue-link {
+	color: #89b3ff;
+}
+
 .panel-body ul li ul li:hover {
 	background-color: #1b1e26;
 }
