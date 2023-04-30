@@ -219,6 +219,38 @@
 
 					<li class="top-item"> 
 						<a href="#"> 
+							<span class="item-icon">#</span> Manejando datos
+						</a>
+
+						<ul>
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>OrderBy
+								</a>
+							</li>
+
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>OrderByDesc
+								</a>
+							</li>
+
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>First
+								</a>
+							</li>
+
+							<li>
+								<a href="#">
+									<span class="item-icon">○</span>Auth User
+								</a>
+							</li>
+						</ul>
+					</li>
+
+					<li class="top-item"> 
+						<a href="#"> 
 							<span class="item-icon">#</span> Exportando datos
 						</a>
 						<ul>
@@ -1083,6 +1115,129 @@
 				<div class="cmd-code">
 					https://myapi.com/api/movies?filter=category.state.name:habilitado|category.state.name:activado|category.name:acción
 				</div>
+			</article>
+
+			<article>
+				<h1> <span class="item-icon"># </span> Manejando datos </h1>
+				Aparte de poder filtrar los datos de su <span class="label">API</span> atravéz de la url también puede realizar otro tipo de operaciones adicionales sobre sus datos para mantener de mejor manera los resultados de las consultas a su <span class="label">API</span>. <br/> <br/>
+
+				<h3> # orderBy </h3>
+
+				Puede solicitarle a la <span class="label">API</span> que ordene los resultados con base en uno de los campos del modelo, para esto puede pasarle el parámetro <span class="label">orderBy</span> en la url y este parámetro debe indicar el campo por el que se desea ordenar los resultados ejemplo:
+
+				<div class="cmd-code">https://myapi.com/users?orderBy=id</div>
+
+				En el caso de tratarse de un entero se ordenarán los datos de menor a mayor, en el caso de un string se ordenarán alfabeticamente de la <span class="label">A-Z</span> y en el caso de las fechas se ordenarán los registros del mas viejo al mas nuevo ejemplo:
+
+				<div class="cmd-code">https://myapi.com/users?orderBy=id <span class="comment-code">// ordenados de menor a mayor</span></div>
+				<div class="cmd-code">https://myapi.com/users?orderBy=name <span class="comment-code">// ordenados de la A-Z</span></div>
+				<div class="cmd-code">https://myapi.com/users?orderBy=created_at <span class="comment-code">// ordenados del mas viejo al mas nuevo</span></div>
+
+				<h3># orderByDesc</h3>
+
+				Al igual que el parámetro <span class="label">orderBy</span> puede usar el parámetro <span class="label">orderByDesc</span> para ordenar los resultados de la <span class="label">API</span> este parámetro funciona igual que <span class="label">orderBy</span> con la diferencia de que ordenará los datos a la inverza ejemplo:
+
+				<div class="cmd-code">https://myapi.com/users?orderByDesc=id <span class="comment-code">// ordenados de mayor a menor</span></div>
+				<div class="cmd-code">https://myapi.com/users?orderByDesc=name <span class="comment-code">// ordenados de la Z-A</span></div>
+				<div class="cmd-code">https://myapi.com/users?orderByDesc=created_at <span class="comment-code">// ordenados del mas nuevo al mas viejo</span></div>
+
+				<h3># first</h3>
+
+				Por defecto las repuesta de la <span class="label">API</span> devolverán una colección de datos. en algunos casos puede que necesite traerse la información de un solo modelo lo cual no es viable obtener la coleción de datos y luego llamar el registro de la posisión cero por ejemplo <span class="label">users[0]</span>. para solucionar esto usted puede pensar en crearse un endpoint que por url le pase el id del modelo que quiere obtener y devolver la información de este registro en un objeto en lugar de una coleción de datos por ejemplo:
+
+				<div class="cmd-code">https://myapi.com/users/1</div>
+
+				Sin embargo esto ya es posbile hacerlo usando el <span class="label">OData</span> no tendrá que agregar un nuevo endpoint solo deberá pasar el parámetro <span class="label">first</span> a la url que ya devuelve la coleción de datos y este en lugar de devolver una coleción como esta por ejemplo:
+
+				<div class="code-block">
+					{
+						<div class="code-padding">
+							<span class="green-code">"data"</span> : {
+								<div class="code-padding">
+									<span class="green-code">"data"</span>: [
+									<div class="code-padding">
+										{
+											<div class="code-padding">
+												<span class="green-code">"id"</span> : <span class="code-sign">1</span>, <br/>
+												<span class="comment-code">// ...rest of your object</span>
+											</div>
+										}, <br/>
+										{
+											<div class="code-padding">
+												<span class="green-code">"id"</span> : <span class="code-sign">2</span>, <br/>
+												<span class="comment-code">// ...rest of your object</span>
+											</div>
+										},<br/>
+										<span class="comment-code">// ... rest</span>
+									</div>
+									], <br/>
+									<span class="green-code">"length"</span>: <span class="code-sign">20</span>
+								</div>
+							}, <br/>
+							<span class="green-code">"code"</span> : <span class="yellow-code">200</span>
+						</div>
+					}
+				</div>
+
+				Le devolverá un solo objeto en este caso el primero de la coleción:
+
+				<div class="code-block">
+					{
+						<div class="code-padding">
+							<span class="green-code">"data"</span> : {
+								<div class="code-padding">
+									<span class="green-code">"data"</span>: {
+									<div class="code-padding">
+										<span class="green-code">"id"</span> : <span class="code-sign">1</span>, <br/>
+										<span class="comment-code">// ...rest of your object</span>
+									</div> } <br/>
+									<span class="green-code">"length"</span>: <span class="code-sign">1</span>
+								</div>
+							}, <br/>
+							<span class="green-code">"code"</span> : <span class="yellow-code">200</span>
+						</div>
+					}
+				</div>
+
+				Si desea obtener un objeto diferente al primero simplemente aplique un filtro por id para obtener unicamente el dato por este id y aplique igualmente el parámetro <span class="label">first</span> para que traiga ese dato en un objeto en lugar de una coleción ejemplo:
+
+				<div class="cmd-code">https://myapi.com/users?filter=id:5&first</div>
+
+				Esta sería la respuesta que recibiriamos:
+
+				<div class="code-block">
+					{
+						<div class="code-padding">
+							<span class="green-code">"data"</span> : {
+								<div class="code-padding">
+									<span class="green-code">"data"</span>: {
+									<div class="code-padding">
+										<span class="green-code">"id"</span> : <span class="code-sign">5</span>, <br/>
+										<span class="comment-code">// ...rest of your object</span>
+									</div> } <br/>
+									<span class="green-code">"length"</span>: <span class="code-sign">1</span>
+								</div>
+							}, <br/>
+							<span class="green-code">"code"</span> : <span class="yellow-code">200</span>
+						</div>
+					}
+				</div>
+
+				<h3> # Auth User </h3>
+
+				Si bien ya puede filtrar los datos de la <span class="label">API</span> usando cualquiera de los campos de su modelo puede que necesite filtrar los datos por el <span class="label">Bearer token</span> es decir por el usuario actualmente loguado. aunque puede pasar el id del usuario por parámetro normalmente por ejemplo si quiere filtrar las ordenes del usuario podría usar un filtro de este tipo:
+
+				<div class="cmd-code">https://myapi.com/orders?filter=user_id:1</div>
+
+				Sin embargo el tener que pasar el id del usuario por la url obliga al desarrollador <span class="label">Frontend</span> a realizar un proceso extra para obtener el id del usuario logueado y luego pasarlo por parámetro. con el <span class="label">OData</span> usted puede evitar este proceso extra indicando el alias <span class="label">{auth.user.id}</span> en su url, de esta manera el <span class="label">OData</span> usará el id del usuario logueado obtenido de la función <span class="label">auth()->user()</span> de laravel ejemplo:
+
+				<div class="cmd-code">https://myapi.com/orders?filter=user_id:{auth.user.id}</div>
+
+				No solamente puede usar el id del usuario, puede usar las demas propiedades también ya que <span class="label">{auth.user}</span> es una alias para el objeto del usuario actual. entonces por ejemplo podemos usar un filtro también por el nombre de usuario de esta manera:
+
+				<div class="cmd-code">https://myapi.com/orders?filter=user.name:{auth.user.name}</div>
+
+
 			</article>
 
 			<article>
