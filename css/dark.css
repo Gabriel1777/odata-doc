@@ -54,3 +54,12 @@ body::-webkit-scrollbar-thumb {
   border: 1px solid #f4f4ff;
   background-color: #232730;
 }
+
+.container-theme-button a {
+	padding: 5px 10px;
+	background-color: #1b1e26;
+}
+
+.container-theme-button .active {
+	background-color: #0f3f64;
+}
