@@ -3,6 +3,7 @@
 	padding: 0;
 	font-family: 'Rubik';
 	box-sizing: border-box;
+	transition: all ease 1s;
 }
 
 body {
@@ -157,7 +158,17 @@ main {
 }
 
 .panel-body ul li.top-item > a:hover {
+	padding-left: 40px;
 	background-color: #dee4f9;
+}
+
+.panel-body ul li.active > a:hover {
+	padding-left: 40px;
+	background-color: transparent;
+}
+
+.panel-body ul li ul li > a:hover {
+	padding-left: 20px;
 }
 
 .panel-body ul li a {
@@ -170,16 +181,8 @@ main {
 	border-bottom: 1px solid #dbd1d1;
 }
 
-.panel-body ul li.active {
-	background-color: #EB4432;
-}
-
-.panel-body ul li.active a {
-	color: white;
-}
-
-.panel-body ul li.active .item-icon {
-	color: white;
+.panel-body ul li.active > a, .panel-body ul li.active > a .item-icon {
+	color: #EB4432;
 }
 
 .panel-body ul li ul {
