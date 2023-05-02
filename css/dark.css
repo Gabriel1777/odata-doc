@@ -31,7 +31,7 @@ article h3 {
 }
 
 body {
-	background-color: white;
+	background-color: #1b1e26;
 }
 
 body::-webkit-scrollbar-track {
@@ -62,4 +62,18 @@ body::-webkit-scrollbar-thumb {
 
 .container-theme-button .active {
 	background-color: #0f3f64;
+}
+
+.responsive-menu {
+	background-color: #232730;
+}
+
+.menu-icon {
+  background-color: #B5B5BD;
+}
+
+@media screen and (max-width: 1000px) {
+	.container-theme-button a {
+		background-color: #232730;
+	}
 }

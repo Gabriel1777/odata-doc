@@ -282,6 +282,7 @@ table {
 	top: 20px;
 	right: 20px;
 	width: 100px;
+	z-index: 500;
 	display: flex;
 	margin-right: 0;
 	position: fixed;
@@ -314,6 +315,26 @@ table {
 	border-right: 1px solid #5a5656;
 }
 
+.responsive-menu {
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 500;
+	height: auto;
+	display: none;
+	padding: 15px;
+  	cursor: pointer;
+	position: fixed;
+	background-color: #f4f4ff;
+}
+
+.menu-icon {
+  width: 35px;
+  height: 5px;
+  margin: 6px 0;
+  background-color: #6e6767;
+}
+
 @media screen and (max-width: 1500px) {
 	.left-panel {
 		width: 400px;
@@ -336,3 +357,79 @@ table {
 		margin-left: 300px;
 	}
 }
+
+@media screen and (max-width: 1000px) {
+	body {
+		padding-top: 80px;
+	}
+
+	.doc-main {
+		width: 100%;
+		margin-left: 0;
+	}
+
+	.left-panel {
+		top: 69px;
+		left: -300px;
+		position: fixed;
+	}
+
+	.responsive-menu {
+		display: block;
+	}
+
+	.container-theme-button {
+		top: 10px;
+		right: 10px;
+	}
+
+	.container-theme-button a {
+		background-color: #f4f4ff;
+	}
+}
+
+@media screen and (max-width: 800px) {
+	.big-container-logo {
+		width: 300px;
+		margin-left: 0px;
+	}
+
+	.big-container-logo .laravel-logo {
+		width: 100px;
+		height: auto;
+	}
+
+	.big-container-logo .odata-logo {
+		width: 105px;
+		height: auto;
+	}
+
+	.big-container-logo .logo-divider {
+		font-size: 20px;
+	}
+
+	.big-logo-title {
+		font-size: 20px;
+	}
+
+	article {
+		font-size: 12px;
+		line-height: 27px;
+		margin-bottom: 20px;
+	}
+
+	article h1 {
+		margin-bottom: 13px; 
+	}
+
+	article h3 {
+		color: #3e86f1;
+		font-size: 14px;
+		font-weight: 500;
+	}
+
+	.panel-body ul li a {
+		font-size: 12px;
+	}
+}
+

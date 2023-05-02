@@ -29,6 +29,20 @@ $(document).on('ready', function () {
 
 	$('.left-panel ul li a').on('click', itemClick);
 
+	$('#menu-button').on('click', (e) => {
+		if ($('.left-panel').css('left') == '-300px')
+			$('.left-panel').css('left', '0px');
+		else
+			$('.left-panel').css('left', '-300px');
+	});
+
+	$(window).on('resize', (e) => {
+		if (window.innerWidth > 1000)
+			$('.left-panel').css('left', '0px');
+		else
+			$('.left-panel').css('left', '-300px');
+	});
+
 	$('#dark-button').on('click', (e) => {
 		e.preventDefault();
 		$('.container-theme-button a').removeClass('active');
